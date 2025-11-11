@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.UserMapper">
+    
+    <update id="updateAdminStatus">
+        UPDATE et_user
+        SET is_admin = #{isAdmin}
+        WHERE id = #{userId}
+    </update>
+    
+    <update id="updateDisabledStatus">
+        UPDATE et_user
+        SET enabled = NOT #{isDisabled}
+        WHERE id = #{userId}
+    </update>
+    
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user (
+            username, password, email, phone, add_date, expire_date, add_by,
+            enabled, if_out_source, truename, field_id, province, company, department, groupname
+        ) VALUES (
+            #{username}, #{password}, #{email}, #{phone}, #{addDate}, #{expireDate}, #{addBy},
+            #{enabled}, #{ifOutSource}, #{truename}, #{fieldId}, #{province}, #{company}, #{department}, #{groupname}
+        )
+    </insert>
+    
+    <delete id="deleteUser">
+        DELETE FROM et_user WHERE id = #{userId}
+    </delete>
+    
+    <update id="updateUser">
+        UPDATE et_user
+        SET
+            username = #{username},
+            password = #{password},
+            email = #{email},
+            phone = #{phone},
+            expire_date = #{expireDate},
+            add_by = #{addBy},
+            enabled = #{enabled},
+            if_out_source = #{ifOutSource},
+            truename = #{truename},
+            field_id = #{fieldId},
+            province = #{province},
+            company = #{company},
+            department = #{department},
+            groupname = #{groupname}
+        WHERE id = #{id}
+    </update>
+    
+    <select id="getUser" resultType="com.example.wmsiescore.model.EtUser">
+        SELECT * FROM et_user WHERE id = #{userId}
+    </select>
+    
+    <select id="listUsers" resultType="com.example.wmsiescore.model.EtUser">
+        SELECT * FROM et_user
+    </select>
+    
+    <select id="listUsersByPage" resultType="com.example.wmsiescore.model.EtUser">
+        SELECT * FROM et_user
+        LIMIT #{offset}, #{limit}
+    </select>
+    
+</mapper>
