@@ -1,7 +1,7 @@
 package com.example.wmsiescore.service.impl;
 
 import com.example.wmsiescore.dto.FieldSaveDTO;
-import com.example.wmsiescore.mapper.EtFieldMapper;
+import com.example.wmsiescore.dao.UnifiedEtFieldDao;
 import com.example.wmsiescore.model.EtField;
 import com.example.wmsiescore.service.AdminFieldService;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +19,7 @@ import java.util.List;
 public class AdminFieldServiceImpl implements AdminFieldService {
     
     @Autowired
-    private EtFieldMapper etFieldMapper;
+    private UnifiedEtFieldDao unifiedEtFieldDao;
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -55,7 +55,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             field.setState(BigDecimal.ONE); // 默认状态为1（正常）
         }
         
-        int result = etFieldMapper.insert(field);
+        int result = unifiedEtFieldDao.insertSelective(field);
         return result > 0;
     }
     
@@ -70,7 +70,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
         EtField field = new EtField();
         BeanUtils.copyProperties(fieldSaveDTO, field);
         
-        int result = etFieldMapper.updateById(field);
+        int result = unifiedEtFieldDao.updateById(field);
         return result > 0;
     }
     
@@ -82,7 +82,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             throw new IllegalArgumentException("删除操作必须提供ID");
         }
         
-        int result = etFieldMapper.deleteById(fieldId);
+        int result = unifiedEtFieldDao.deleteById(fieldId.longValue());
         return result > 0;
     }
     
@@ -94,7 +94,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             throw new IllegalArgumentException("批量删除操作必须提供ID列表");
         }
         
-        int result = etFieldMapper.deleteBatchIds(ids);
+        int result = unifiedEtFieldDao.batchDelete(ids.stream().map(Long::valueOf).collect(java.util.stream.Collectors.toList()));
         return result > 0;
     }
     
@@ -106,7 +106,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             throw new IllegalArgumentException("ID不能为空");
         }
         
-        EtField field = etFieldMapper.selectById(fieldId);
+        EtField field = unifiedEtFieldDao.selectById(fieldId.longValue());
         if (field == null) {
             throw new RuntimeException("题库不存在");
         }
@@ -116,6 +116,6 @@ public class AdminFieldServiceImpl implements AdminFieldService {
     
     @Override
     public EtField selectById(Integer fieldId) {
-        return etFieldMapper.selectById(fieldId);
+        return unifiedEtFieldDao.selectById(fieldId.longValue());
     }
 }

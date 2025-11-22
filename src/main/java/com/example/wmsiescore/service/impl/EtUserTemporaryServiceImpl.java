@@ -1,6 +1,6 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.mapper.EtUserTemporaryMapper;
+import com.example.wmsiescore.dao.UnifiedEtUserTemporaryDao;
 import com.example.wmsiescore.model.EtUserTemporary;
 import com.example.wmsiescore.service.EtUserTemporaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,30 +12,30 @@ import java.util.List;
 public class EtUserTemporaryServiceImpl implements EtUserTemporaryService {
 
     @Autowired
-    private EtUserTemporaryMapper etUserTemporaryMapper;
+    private UnifiedEtUserTemporaryDao unifiedEtUserTemporaryDao;
 
     @Override
     public List<EtUserTemporary> findAll() {
-        return etUserTemporaryMapper.findAll();
+        return unifiedEtUserTemporaryDao.selectAll();
     }
 
     @Override
     public EtUserTemporary findById(Integer id) {
-        return etUserTemporaryMapper.findById(id);
+        return unifiedEtUserTemporaryDao.selectById(id.longValue());
     }
 
     @Override
     public int save(EtUserTemporary etUserTemporary) {
-        return etUserTemporaryMapper.insert(etUserTemporary);
+        return unifiedEtUserTemporaryDao.insertSelective(etUserTemporary);
     }
 
     @Override
     public int update(EtUserTemporary etUserTemporary) {
-        return etUserTemporaryMapper.update(etUserTemporary);
+        return unifiedEtUserTemporaryDao.updateById(etUserTemporary);
     }
 
     @Override
     public int delete(Integer id) {
-        return etUserTemporaryMapper.delete(id);
+        return unifiedEtUserTemporaryDao.deleteById(id.longValue());
     }
 }

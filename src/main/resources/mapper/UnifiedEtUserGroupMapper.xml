@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtUserGroupMapper">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUserGroup">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="created_by" property="createdBy" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <!-- 新增字段映射 -->
+        <result column="department" property="department" jdbcType="VARCHAR"/>
+        <result column="groupname" property="groupname" jdbcType="VARCHAR"/>
+        <result column="temporary_department" property="temporaryDepartment" jdbcType="VARCHAR"/>
+        <result column="temporary_groupname" property="temporaryGroupname" jdbcType="VARCHAR"/>
+        <result column="field_id" property="fieldId" jdbcType="BIGINT"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, group_name, description, status, created_by, create_time, update_time,
+        department, groupname, temporary_department, temporary_groupname, field_id, province, company
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">group_name,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="createdBy != null">created_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="department != null">department,</if>
+            <if test="groupname != null">groupname,</if>
+            <if test="temporaryDepartment != null">temporary_department,</if>
+            <if test="temporaryGroupname != null">temporary_groupname,</if>
+            <if test="fieldId != null">field_id,</if>
+            <if test="province != null">province,</if>
+            <if test="company != null">company,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">#{groupName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="department != null">#{department},</if>
+            <if test="groupname != null">#{groupname},</if>
+            <if test="temporaryDepartment != null">#{temporaryDepartment},</if>
+            <if test="temporaryGroupname != null">#{temporaryGroupname},</if>
+            <if test="fieldId != null">#{fieldId},</if>
+            <if test="province != null">#{province},</if>
+            <if test="company != null">#{company},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserGroup">
+        INSERT INTO et_user_group (group_name, description, status, created_by, create_time, 
+                                   department, groupname, temporary_department, temporary_groupname, field_id, province, company)
+        VALUES (#{groupName}, #{description}, #{status}, #{createdBy}, #{createTime},
+                #{department}, #{groupname}, #{temporaryDepartment}, #{temporaryGroupname}, #{fieldId}, #{province}, #{company})
+        ON DUPLICATE KEY UPDATE
+        group_name = VALUES(group_name),
+        description = VALUES(description),
+        status = VALUES(status),
+        update_time = VALUES(create_time),
+        department = VALUES(department),
+        groupname = VALUES(groupname),
+        temporary_department = VALUES(temporary_department),
+        temporary_groupname = VALUES(temporary_groupname),
+        field_id = VALUES(field_id),
+        province = VALUES(province),
+        company = VALUES(company)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="groupName != null and groupName != ''">
+                AND group_name LIKE CONCAT('%', #{groupName}, '%')
+            </if>
+            <if test="description != null and description != ''">
+                AND description LIKE CONCAT('%', #{description}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="createdBy != null">
+                AND created_by = #{createdBy}
+            </if>
+            <if test="department != null and department != ''">
+                AND department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND groupname = #{groupname}
+            </if>
+            <if test="temporaryDepartment != null and temporaryDepartment != ''">
+                AND temporary_department = #{temporaryDepartment}
+            </if>
+            <if test="temporaryGroupname != null and temporaryGroupname != ''">
+                AND temporary_groupname = #{temporaryGroupname}
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="province != null and province != ''">
+                AND province = #{province}
+            </if>
+            <if test="company != null and company != ''">
+                AND company = #{company}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.groupName != null and condition.groupName != ''">
+                AND group_name LIKE CONCAT('%', #{condition.groupName}, '%')
+            </if>
+            <if test="condition.description != null and condition.description != ''">
+                AND description LIKE CONCAT('%', #{condition.description}, '%')
+            </if>
+            <if test="condition.status != null and condition.status != ''">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.createdBy != null">
+                AND created_by = #{condition.createdBy}
+            </if>
+            <if test="condition.department != null and condition.department != ''">
+                AND department = #{condition.department}
+            </if>
+            <if test="condition.groupname != null and condition.groupname != ''">
+                AND groupname = #{condition.groupname}
+            </if>
+            <if test="condition.temporaryDepartment != null and condition.temporaryDepartment != ''">
+                AND temporary_department = #{condition.temporaryDepartment}
+            </if>
+            <if test="condition.temporaryGroupname != null and condition.temporaryGroupname != ''">
+                AND temporary_groupname = #{condition.temporaryGroupname}
+            </if>
+            <if test="condition.fieldId != null">
+                AND field_id = #{condition.fieldId}
+            </if>
+            <if test="condition.province != null and condition.province != ''">
+                AND province = #{condition.province}
+            </if>
+            <if test="condition.company != null and condition.company != ''">
+                AND company = #{condition.company}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user_group
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="groupName != null and groupName != ''">
+                AND group_name LIKE CONCAT('%', #{groupName}, '%')
+            </if>
+            <if test="description != null and description != ''">
+                AND description LIKE CONCAT('%', #{description}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="createdBy != null">
+                AND created_by = #{createdBy}
+            </if>
+            <if test="department != null and department != ''">
+                AND department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND groupname = #{groupname}
+            </if>
+            <if test="temporaryDepartment != null and temporaryDepartment != ''">
+                AND temporary_department = #{temporaryDepartment}
+            </if>
+            <if test="temporaryGroupname != null and temporaryGroupname != ''">
+                AND temporary_groupname = #{temporaryGroupname}
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="province != null and province != ''">
+                AND province = #{province}
+            </if>
+            <if test="company != null and company != ''">
+                AND company = #{company}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_group (group_name, description, status, created_by, create_time, 
+                                   department, groupname, temporary_department, temporary_groupname, field_id, province, company)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.groupName}, #{item.description}, #{item.status}, #{item.createdBy}, #{item.createTime},
+             #{item.department}, #{item.groupname}, #{item.temporaryDepartment}, #{item.temporaryGroupname}, 
+             #{item.fieldId}, #{item.province}, #{item.company})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_user_group WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtUserGroup">
+        UPDATE et_user_group
+        <set>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="groupname != null">groupname = #{groupname},</if>
+            <if test="temporaryDepartment != null">temporary_department = #{temporaryDepartment},</if>
+            <if test="temporaryGroupname != null">temporary_groupname = #{temporaryGroupname},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="company != null">company = #{company},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <insert id="insertUserGroup" parameterType="com.example.wmsiescore.model.EtUserGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group (group_name, description, status, created_by, create_time, 
+                                   department, groupname, temporary_department, temporary_groupname, field_id, province, company)
+        VALUES (#{groupName}, #{description}, #{status}, #{createdBy}, #{createTime},
+                #{department}, #{groupname}, #{temporaryDepartment}, #{temporaryGroupname}, #{fieldId}, #{province}, #{company})
+    </insert>
+
+    <update id="updateUserGroup" parameterType="com.example.wmsiescore.model.EtUserGroup">
+        UPDATE et_user_group 
+        SET group_name = #{groupName}, 
+            description = #{description}, 
+            status = #{status}, 
+            update_time = #{updateTime},
+            department = #{department},
+            groupname = #{groupname},
+            temporary_department = #{temporaryDepartment},
+            temporary_groupname = #{temporaryGroupname},
+            field_id = #{fieldId},
+            province = #{province},
+            company = #{company}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUserGroup">
+        DELETE FROM et_user_group WHERE id = #{id}
+    </delete>
+
+    <select id="getUserGroupById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        WHERE id = #{id}
+    </select>
+
+    <select id="listUserGroupsByCreator" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        WHERE created_by = #{createdBy}
+    </select>
+
+    <select id="listAllUserGroups" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateUserGroupStatus">
+        UPDATE et_user_group 
+        SET status = #{status} 
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据用户名查询群组列表 -->
+    <select id="getUserGroupsByUsername" resultMap="BaseResultMap">
+        SELECT DISTINCT <include refid="Base_Column_List"/>
+        FROM et_user_group ug
+        WHERE ug.username = #{username}
+        AND ug.enabled = 1
+        and ug.expire_date = now()
+    </select>
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtKnowledgePointDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtKnowledgePoint">
+        <id column="point_id" property="pointId" jdbcType="INTEGER"/>
+        <result column="point_name" property="pointName" jdbcType="VARCHAR"/>
+        <result column="field_id" property="fieldId" jdbcType="INTEGER"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        point_id, point_name, field_id, memo, state
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        ORDER BY point_id ASC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        WHERE point_id = #{pointId}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtKnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
+        INSERT INTO et_knowledge_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pointName != null">point_name,</if>
+            <if test="fieldId != null">field_id,</if>
+            <if test="memo != null">memo,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="pointName != null">#{pointName},</if>
+            <if test="fieldId != null">#{fieldId},</if>
+            <if test="memo != null">#{memo},</if>
+            <if test="state != null">#{state},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtKnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
+        INSERT INTO et_knowledge_point (point_name, field_id, memo, state)
+        VALUES (#{pointName}, #{fieldId}, #{memo}, #{state})
+        ON DUPLICATE KEY UPDATE
+        point_name = VALUES(point_name),
+        field_id = VALUES(field_id),
+        memo = VALUES(memo),
+        state = VALUES(state)
+    </insert>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        <where>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+            <if test="pointName != null and pointName != ''">AND point_name = #{pointName}</if>
+            <if test="fieldId != null">AND field_id = #{fieldId}</if>
+            <if test="memo != null and memo != ''">AND memo = #{memo}</if>
+            <if test="state != null">AND state = #{state}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        <where>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+            <if test="pointName != null and pointName != ''">AND point_name = #{pointName}</if>
+            <if test="fieldId != null">AND field_id = #{fieldId}</if>
+            <if test="memo != null and memo != ''">AND memo = #{memo}</if>
+            <if test="state != null">AND state = #{state}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_knowledge_point
+        <where>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+            <if test="pointName != null and pointName != ''">AND point_name = #{pointName}</if>
+            <if test="fieldId != null">AND field_id = #{fieldId}</if>
+            <if test="memo != null and memo != ''">AND memo = #{memo}</if>
+            <if test="state != null">AND state = #{state}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_knowledge_point (point_name, field_id, memo, state)
+        VALUES
+        <foreach collection="knowledgePoints" item="point" separator=",">
+            (#{point.pointName}, #{point.fieldId}, #{point.memo}, #{point.state})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_knowledge_point WHERE point_id IN
+        <foreach collection="pointIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_knowledge_point
+        <set>
+            <if test="pointName != null">point_name = #{pointName},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state},</if>
+        </set>
+        WHERE point_id = #{pointId}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtKnowledgePoint">
+        UPDATE et_knowledge_point
+        <set>
+            <if test="pointName != null">point_name = #{pointName},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        WHERE point_id = #{pointId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_knowledge_point WHERE point_id = #{pointId}
+    </delete>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        WHERE point_name = #{pointName}
+    </select>
+
+    <select id="selectByFieldId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        WHERE field_id = #{fieldId}
+    </select>
+
+    <select id="selectByState" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        WHERE state = #{state}
+    </select>
+
+    <select id="selectByNameLike" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        WHERE point_name LIKE CONCAT('%', #{pointName}, '%')
+    </select>
+
+</mapper>

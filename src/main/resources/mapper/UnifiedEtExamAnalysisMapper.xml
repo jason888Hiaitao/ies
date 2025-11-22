@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtExamAnalysisDao">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUserExamHistory">
+        <id column="histId" property="histId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="exam_paper_id" property="examPaperId" jdbcType="BIGINT"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="answer_sheet" property="answerSheet" jdbcType="VARCHAR"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="submit_time" property="submitTime" jdbcType="TIMESTAMP"/>
+        <result column="point_get" property="pointGet" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        histId, user_id, exam_paper_id, content, create_time, answer_sheet, duration, submit_time, point_get
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_exam_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userAccount != null">user_account,</if>
+            <if test="examPaperId != null">exam_paper_id,</if>
+            <if test="examTitle != null">exam_title,</if>
+            <if test="score != null">score,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="duration != null">duration,</if>
+            <if test="actualDuration != null">actual_duration,</if>
+            <if test="status != null">status,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userAccount != null">#{userAccount},</if>
+            <if test="examPaperId != null">#{examPaperId},</if>
+            <if test="examTitle != null">#{examTitle},</if>
+            <if test="score != null">#{score},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="actualDuration != null">#{actualDuration},</if>
+            <if test="status != null">#{status},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        INSERT INTO et_user_exam_history (user_id, user_name, user_account, exam_paper_id, exam_title, 
+        score, total_score, duration, actual_duration, status, start_time, end_time, create_time, update_time)
+        VALUES (#{userId}, #{userName}, #{userAccount}, #{examPaperId}, #{examTitle}, 
+        #{score}, #{totalScore}, #{duration}, #{actualDuration}, #{status}, #{startTime}, #{endTime}, #{createTime}, #{updateTime})
+        ON DUPLICATE KEY UPDATE
+        user_name = VALUES(user_name),
+        user_account = VALUES(user_account),
+        exam_title = VALUES(exam_title),
+        score = VALUES(score),
+        total_score = VALUES(total_score),
+        duration = VALUES(duration),
+        actual_duration = VALUES(actual_duration),
+        status = VALUES(status),
+        start_time = VALUES(start_time),
+        end_time = VALUES(end_time),
+        update_time = VALUES(update_time)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                AND user_account LIKE CONCAT('%', #{userAccount}, '%')
+            </if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="examTitle != null and examTitle != ''">
+                AND exam_title LIKE CONCAT('%', #{examTitle}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="score != null">
+                AND score = #{score}
+            </if>
+            <if test="totalScore != null">
+                AND total_score = #{totalScore}
+            </if>
+            <if test="duration != null">
+                AND duration = #{duration}
+            </if>
+            <if test="actualDuration != null">
+                AND actual_duration = #{actualDuration}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.userId != null">AND user_id = #{condition.userId}</if>
+            <if test="condition.userName != null and condition.userName != ''">
+                AND user_name LIKE CONCAT('%', #{condition.userName}, '%')
+            </if>
+            <if test="condition.userAccount != null and condition.userAccount != ''">
+                AND user_account LIKE CONCAT('%', #{condition.userAccount}, '%')
+            </if>
+            <if test="condition.examPaperId != null">AND exam_paper_id = #{condition.examPaperId}</if>
+            <if test="condition.examTitle != null and condition.examTitle != ''">
+                AND exam_title LIKE CONCAT('%', #{condition.examTitle}, '%')
+            </if>
+            <if test="condition.status != null and condition.status != ''">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.score != null">
+                AND score = #{condition.score}
+            </if>
+            <if test="condition.totalScore != null">
+                AND total_score = #{condition.totalScore}
+            </if>
+            <if test="condition.duration != null">
+                AND duration = #{condition.duration}
+            </if>
+            <if test="condition.actualDuration != null">
+                AND actual_duration = #{condition.actualDuration}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user_exam_history
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                AND user_account LIKE CONCAT('%', #{userAccount}, '%')
+            </if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="examTitle != null and examTitle != ''">
+                AND exam_title LIKE CONCAT('%', #{examTitle}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="score != null">
+                AND score = #{score}
+            </if>
+            <if test="totalScore != null">
+                AND total_score = #{totalScore}
+            </if>
+            <if test="duration != null">
+                AND duration = #{duration}
+            </if>
+            <if test="actualDuration != null">
+                AND actual_duration = #{actualDuration}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_exam_history (user_id, user_name, user_account, exam_paper_id, exam_title, 
+        score, total_score, duration, actual_duration, status, start_time, end_time, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.userName}, #{item.userAccount}, #{item.examPaperId}, #{item.examTitle}, 
+             #{item.score}, #{item.totalScore}, #{item.duration}, #{item.actualDuration}, #{item.status}, 
+             #{item.startTime}, #{item.endTime}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_user_exam_history WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        UPDATE et_user_exam_history
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="examPaperId != null">exam_paper_id = #{examPaperId},</if>
+            <if test="examTitle != null">exam_title = #{examTitle},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="actualDuration != null">actual_duration = #{actualDuration},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <insert id="insertUserExamHistory" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_exam_history (user_id, user_name, user_account, exam_paper_id, exam_title, 
+        score, total_score, duration, actual_duration, status, start_time, end_time, create_time)
+        VALUES (#{userId}, #{userName}, #{userAccount}, #{examPaperId}, #{examTitle}, 
+        #{score}, #{totalScore}, #{duration}, #{actualDuration}, #{status}, #{startTime}, #{endTime}, #{createTime})
+    </insert>
+
+    <update id="updateUserExamHistory" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        UPDATE et_user_exam_history 
+        SET user_name = #{userName}, 
+            user_account = #{userAccount}, 
+            exam_title = #{examTitle}, 
+            score = #{score}, 
+            total_score = #{totalScore}, 
+            duration = #{duration}, 
+            actual_duration = #{actualDuration}, 
+            status = #{status}, 
+            start_time = #{startTime}, 
+            end_time = #{endTime}, 
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getUserExamHistory" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE user_id = #{userId} AND exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="listExamHistoriesByExam" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listExamHistoriesByUser" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listCompletedExams" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ORDER BY score DESC, end_time ASC
+    </select>
+
+    <select id="listAbsentExams" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'absent'
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="countTotalParticipants" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="countActualParticipants" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="countAbsentParticipants" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'absent'
+    </select>
+
+    <select id="calculateAverageScore" resultType="java.math.BigDecimal">
+        SELECT COALESCE(AVG(score), 0) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="getMaxScore" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(score), 0) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="getMinScore" resultType="java.lang.Integer">
+        SELECT COALESCE(MIN(score), 0) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="calculatePassRate" resultType="java.math.BigDecimal">
+        SELECT 
+            CASE 
+                WHEN total.total_count = 0 THEN 0
+                ELSE ROUND(passed.pass_count * 100.0 / total.total_count, 2)
+            END as pass_rate
+        FROM (
+            SELECT COUNT(*) as total_count
+            FROM et_user_exam_history 
+            WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ) total,
+        (
+            SELECT COUNT(*) as pass_count
+            FROM et_user_exam_history 
+            WHERE exam_paper_id = #{examPaperId} AND status = 'completed' AND score >= #{passScore}
+        ) passed
+    </select>
+
+    <select id="getExamRankings" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ORDER BY score DESC, end_time ASC
+    </select>
+
+    <select id="getUserExamDurations" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ORDER BY actual_duration ASC
+    </select>
+
+    <select id="getExamResultsForExport" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId}
+        ORDER BY score DESC, user_name ASC
+    </select>
+</mapper>

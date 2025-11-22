@@ -4,9 +4,9 @@ import com.example.wmsiescore.enums.ExamPaperStatusEnum;
 import com.example.wmsiescore.enums.QuestionTypeEnum;
 import com.example.wmsiescore.exception.ResourceNotFoundException;
 import com.example.wmsiescore.exception.ParameterValidationException;
-import com.example.wmsiescore.mapper.EtExamPaperMapper;
-import com.example.wmsiescore.mapper.EtQuestionMapper;
-import com.example.wmsiescore.mapper.EtUserExamHistoryMapper;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
+import com.example.wmsiescore.dao.UnifiedEtQuestionDao;
+import com.example.wmsiescore.dao.UnifiedEtUserExamHistoryDao;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.model.EtQuestion;
 import com.example.wmsiescore.model.EtUserExamHistory;
@@ -18,6 +18,7 @@ import com.example.wmsiescore.dto.ExamStartResult;
 import com.example.wmsiescore.vo.QuestionVO;
 import com.example.wmsiescore.service.ExamService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,13 +45,13 @@ public class ExamServiceImpl implements ExamService {
 //    private ExamMapper examMapper;
 
     @Autowired
-    private EtExamPaperMapper etExamPaperMapper;
+    private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
     
     @Autowired
-    private EtQuestionMapper etQuestionMapper;
+    private UnifiedEtQuestionDao unifiedEtQuestionDao;
     
     @Autowired
-    private EtUserExamHistoryMapper etUserExamHistoryMapper;
+    private UnifiedEtUserExamHistoryDao unifiedEtUserExamHistoryDao;
 
     @Override
     public ExamStartResult startExam(Long userId, Long examPaperId) {
@@ -63,7 +64,7 @@ public class ExamServiceImpl implements ExamService {
         }
 
         // 检查试卷是否存在且可考试
-        EtExamPaper examPaper = etExamPaperMapper.getExamPaperById(examPaperId);
+        EtExamPaper examPaper = unifiedEtExamPaperDao.selectById(examPaperId);
         if (examPaper == null) {
             throw new ResourceNotFoundException("试卷", examPaperId);
         }
@@ -80,10 +81,10 @@ public class ExamServiceImpl implements ExamService {
         examHistory.setPointGet(BigDecimal.ZERO); // 初始分数为0
         
         // 保存考试历史记录
-        etUserExamHistoryMapper.insert(examHistory);
+        unifiedEtUserExamHistoryDao.insertSelective(examHistory);
         
         // 获取试卷题目列表
-        List<EtQuestion> questions = etQuestionMapper.getQuestionsByPaper(examPaperId);
+        List<EtQuestion> questions = unifiedEtQuestionDao.selectByExamPaperId(examPaperId);
         if (questions == null) {
             questions = new ArrayList<>();
         }
@@ -130,7 +131,7 @@ public class ExamServiceImpl implements ExamService {
         }
 
         // 检查考试记录是否存在
-        EtUserExamHistory history = etUserExamHistoryMapper.findById(recordId);
+        EtUserExamHistory history = unifiedEtUserExamHistoryDao.selectById(recordId);
         if (history == null) {
             throw new ResourceNotFoundException("考试历史记录", recordId);
         }
@@ -159,13 +160,13 @@ public class ExamServiceImpl implements ExamService {
         }
 
         // 检查考试记录是否存在
-        EtUserExamHistory history = etUserExamHistoryMapper.findById(recordId);
+        EtUserExamHistory history = unifiedEtUserExamHistoryDao.selectById(recordId);
         if (history == null) {
             throw new ResourceNotFoundException("考试历史记录", recordId);
         }
         
         // 获取试卷信息
-        EtExamPaper examPaper = etExamPaperMapper.getExamPaperById(history.getExamPaperId());
+        EtExamPaper examPaper = unifiedEtExamPaperDao.selectById(history.getExamPaperId());
         if (examPaper == null) {
             throw new ResourceNotFoundException("试卷", history.getExamPaperId());
         }
@@ -177,7 +178,7 @@ public class ExamServiceImpl implements ExamService {
             String userAnswer = entry.getValue();
             
             // 获取题目信息
-            EtQuestion question = etQuestionMapper.getQuestionById(questionId);
+            EtQuestion question = unifiedEtQuestionDao.selectById(questionId);
             if (question == null) {
                 log.warn("题目ID {} 不存在，跳过评分", questionId);
                 continue;
@@ -215,7 +216,7 @@ public class ExamServiceImpl implements ExamService {
         history.setDuration((int) durationMinutes);
         
         // 保存更新的考试记录
-        etUserExamHistoryMapper.update(history);
+        unifiedEtUserExamHistoryDao.updateById(history);
         
         log.info("考试记录{}提交成功，得分：{}，考试时长：{}分钟", recordId, totalScore, durationMinutes);
         return true;
@@ -285,7 +286,7 @@ public class ExamServiceImpl implements ExamService {
         }
 
         // 1. 查询考试历史记录
-        EtUserExamHistory history = etUserExamHistoryMapper.findById(recordId);
+        EtUserExamHistory history = unifiedEtUserExamHistoryDao.selectById(recordId);
         if (history == null) {
             throw new ResourceNotFoundException("考试历史记录", recordId);
         }
@@ -296,13 +297,13 @@ public class ExamServiceImpl implements ExamService {
         }
 
         // 3. 查询试卷信息
-        EtExamPaper examPaper = etExamPaperMapper.getExamPaperById(history.getExamPaperId());
+        EtExamPaper examPaper = unifiedEtExamPaperDao.selectById(history.getExamPaperId());
         if (examPaper == null) {
             throw new ResourceNotFoundException("试卷", history.getExamPaperId());
         }
 
         // 4. 查询试卷题目
-        List<EtQuestion> questions = etQuestionMapper.getQuestionsByPaper(history.getExamPaperId());
+        List<EtQuestion> questions = unifiedEtQuestionDao.selectByExamPaperId(history.getExamPaperId());
         if (questions == null || questions.isEmpty()) {
             throw new ParameterValidationException("examPaperId", "试卷中没有题目");
         }
@@ -439,7 +440,7 @@ public class ExamServiceImpl implements ExamService {
         
         try {
             // 从考试历史记录中获取答案
-            EtUserExamHistory history = etUserExamHistoryMapper.findById(historyId);
+            EtUserExamHistory history = unifiedEtUserExamHistoryDao.selectById(historyId);
             if (history != null && StringUtils.hasText(history.getAnswerSheet())) {
                 // 解析JSON格式的答案
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -519,7 +520,7 @@ public class ExamServiceImpl implements ExamService {
         try {
             log.info("开始获取用户待考试列表，用户ID: {}", userId);
             
-            List<PendingExamDTO> pendingExams = etExamPaperMapper.getPendingExamsForUser(userId);
+            List<PendingExamDTO> pendingExams = unifiedEtExamPaperDao.selectByUserId(userId);
             if (pendingExams == null) {
                 pendingExams = new ArrayList<>();
             }
@@ -544,17 +545,19 @@ public class ExamServiceImpl implements ExamService {
         try {
             log.info("开始获取题目详情，题目ID: {}", questionId);
             
-            EtQuestion question = etQuestionMapper.getQuestionById(questionId);
+            EtQuestion question = unifiedEtQuestionDao.selectById(questionId);
             if (question == null) {
                 log.warn("题目不存在，题目ID: {}", questionId);
                 throw new ResourceNotFoundException("题目不存在");
             }
             
             // 更新题目曝光次数
-            etQuestionMapper.updateQuestionStatistics(questionId, 
-                question.getExposeTimes() != null ? question.getExposeTimes() + 1 : 1, 
-                question.getRightTimes(), 
-                question.getWrongTimes());
+            EtQuestion updateQuestion = new EtQuestion();
+            updateQuestion.setId(questionId);
+            updateQuestion.setExposeTimes(question.getExposeTimes() != null ? question.getExposeTimes() + 1 : 1);
+            updateQuestion.setRightTimes(question.getRightTimes());
+            updateQuestion.setWrongTimes(question.getWrongTimes());
+            unifiedEtQuestionDao.updateById(updateQuestion);
             
             log.info("题目详情获取完成，题目ID: {}", questionId);
             return question;

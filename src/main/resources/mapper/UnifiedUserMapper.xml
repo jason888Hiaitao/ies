@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedUserDao">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="add_date" property="addDate" jdbcType="TIMESTAMP"/>
+        <result column="expire_date" property="expireDate" jdbcType="TIMESTAMP"/>
+        <result column="add_by" property="addBy" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="BOOLEAN"/>
+        <result column="if_out_source" property="ifOutSource" jdbcType="BOOLEAN"/>
+        <result column="truename" property="truename" jdbcType="VARCHAR"/>
+        <result column="field_id" property="fieldId" jdbcType="BIGINT"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="department" property="department" jdbcType="VARCHAR"/>
+        <result column="groupname" property="groupname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, 
+        truename, field_id, province, company, department, groupname
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="email != null">email,</if>
+            <if test="phone != null">phone,</if>
+            <if test="addDate != null">add_date,</if>
+            <if test="expireDate != null">expire_date,</if>
+            <if test="addBy != null">add_by,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="ifOutSource != null">if_out_source,</if>
+            <if test="truename != null">truename,</if>
+            <if test="fieldId != null">field_id,</if>
+            <if test="province != null">province,</if>
+            <if test="company != null">company,</if>
+            <if test="department != null">department,</if>
+            <if test="groupname != null">groupname,</if>
+            <if test="isAdmin != null">is_admin,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="email != null">#{email},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="addDate != null">#{addDate},</if>
+            <if test="expireDate != null">#{expireDate},</if>
+            <if test="addBy != null">#{addBy},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="ifOutSource != null">#{ifOutSource},</if>
+            <if test="truename != null">#{truename},</if>
+            <if test="fieldId != null">#{fieldId},</if>
+            <if test="province != null">#{province},</if>
+            <if test="company != null">#{company},</if>
+            <if test="department != null">#{department},</if>
+            <if test="groupname != null">#{groupname},</if>
+            <if test="isAdmin != null">#{isAdmin},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUser">
+        INSERT INTO et_user (username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, 
+        truename, field_id, province, company, department, groupname, is_admin)
+        VALUES (#{username}, #{password}, #{email}, #{phone}, #{addDate}, #{expireDate}, #{addBy}, #{enabled}, #{ifOutSource}, 
+        #{truename}, #{fieldId}, #{province}, #{company}, #{department}, #{groupname}, #{isAdmin})
+        ON DUPLICATE KEY UPDATE
+        password = VALUES(password),
+        email = VALUES(email),
+        phone = VALUES(phone),
+        expire_date = VALUES(expire_date),
+        add_by = VALUES(add_by),
+        enabled = VALUES(enabled),
+        if_out_source = VALUES(if_out_source),
+        truename = VALUES(truename),
+        field_id = VALUES(field_id),
+        province = VALUES(province),
+        company = VALUES(company),
+        department = VALUES(department),
+        groupname = VALUES(groupname),
+        is_admin = VALUES(is_admin)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND email LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test="addBy != null and addBy != ''">
+                AND add_by = #{addBy}
+            </if>
+            <if test="enabled != null">
+                AND enabled = #{enabled}
+            </if>
+            <if test="ifOutSource != null">
+                AND if_out_source = #{ifOutSource}
+            </if>
+            <if test="truename != null and truename != ''">
+                AND truename LIKE CONCAT('%', #{truename}, '%')
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="province != null and province != ''">
+                AND province = #{province}
+            </if>
+            <if test="company != null and company != ''">
+                AND company = #{company}
+            </if>
+            <if test="department != null and department != ''">
+                AND department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND groupname = #{groupname}
+            </if>
+            <if test="isAdmin != null">
+                AND is_admin = #{isAdmin}
+            </if>
+        </where>
+        ORDER BY add_date DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.username != null and condition.username != ''">
+                AND username LIKE CONCAT('%', #{condition.username}, '%')
+            </if>
+            <if test="condition.email != null and condition.email != ''">
+                AND email LIKE CONCAT('%', #{condition.email}, '%')
+            </if>
+            <if test="condition.phone != null and condition.phone != ''">
+                AND phone LIKE CONCAT('%', #{condition.phone}, '%')
+            </if>
+            <if test="condition.addBy != null and condition.addBy != ''">
+                AND add_by = #{condition.addBy}
+            </if>
+            <if test="condition.enabled != null">
+                AND enabled = #{condition.enabled}
+            </if>
+            <if test="condition.ifOutSource != null">
+                AND if_out_source = #{condition.ifOutSource}
+            </if>
+            <if test="condition.truename != null and condition.truename != ''">
+                AND truename LIKE CONCAT('%', #{condition.truename}, '%')
+            </if>
+            <if test="condition.fieldId != null">
+                AND field_id = #{condition.fieldId}
+            </if>
+            <if test="condition.province != null and condition.province != ''">
+                AND province = #{condition.province}
+            </if>
+            <if test="condition.company != null and condition.company != ''">
+                AND company = #{condition.company}
+            </if>
+            <if test="condition.department != null and condition.department != ''">
+                AND department = #{condition.department}
+            </if>
+            <if test="condition.groupname != null and condition.groupname != ''">
+                AND groupname = #{condition.groupname}
+            </if>
+            <if test="condition.isAdmin != null">
+                AND is_admin = #{condition.isAdmin}
+            </if>
+        </where>
+        ORDER BY add_date DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND email LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test="addBy != null and addBy != ''">
+                AND add_by = #{addBy}
+            </if>
+            <if test="enabled != null">
+                AND enabled = #{enabled}
+            </if>
+            <if test="ifOutSource != null">
+                AND if_out_source = #{ifOutSource}
+            </if>
+            <if test="truename != null and truename != ''">
+                AND truename LIKE CONCAT('%', #{truename}, '%')
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="province != null and province != ''">
+                AND province = #{province}
+            </if>
+            <if test="company != null and company != ''">
+                AND company = #{company}
+            </if>
+            <if test="department != null and department != ''">
+                AND department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND groupname = #{groupname}
+            </if>
+            <if test="isAdmin != null">
+                AND is_admin = #{isAdmin}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user (username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, 
+        truename, field_id, province, company, department, groupname, is_admin)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.username}, #{item.password}, #{item.email}, #{item.phone}, #{item.addDate}, #{item.expireDate}, 
+             #{item.addBy}, #{item.enabled}, #{item.ifOutSource}, #{item.truename}, #{item.fieldId}, 
+             #{item.province}, #{item.company}, #{item.department}, #{item.groupname}, #{item.isAdmin})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_user WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtUser">
+        UPDATE et_user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="addDate != null">add_date = #{addDate},</if>
+            <if test="expireDate != null">expire_date = #{expireDate},</if>
+            <if test="addBy != null">add_by = #{addBy},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="ifOutSource != null">if_out_source = #{ifOutSource},</if>
+            <if test="truename != null">truename = #{truename},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="company != null">company = #{company},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="groupname != null">groupname = #{groupname},</if>
+            <if test="isAdmin != null">is_admin = #{isAdmin},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <update id="updateAdminStatus">
+        UPDATE et_user
+        SET is_admin = #{isAdmin}
+        WHERE id = #{userId}
+    </update>
+    
+    <update id="updateDisabledStatus">
+        UPDATE et_user
+        SET enabled = NOT #{isDisabled}
+        WHERE id = #{userId}
+    </update>
+    
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user (
+            username, password, email, phone, add_date, expire_date, add_by,
+            enabled, if_out_source, truename, field_id, province, company, department, groupname
+        ) VALUES (
+            #{username}, #{password}, #{email}, #{phone}, #{addDate}, #{expireDate}, #{addBy},
+            #{enabled}, #{ifOutSource}, #{truename}, #{fieldId}, #{province}, #{company}, #{department}, #{groupname}
+        )
+    </insert>
+    
+    <delete id="deleteUser">
+        DELETE FROM et_user WHERE id = #{userId}
+    </delete>
+    
+    <update id="updateUser">
+        UPDATE et_user
+        SET
+            username = #{username},
+            password = #{password},
+            email = #{email},
+            phone = #{phone},
+            expire_date = #{expireDate},
+            add_by = #{addBy},
+            enabled = #{enabled},
+            if_out_source = #{ifOutSource},
+            truename = #{truename},
+            field_id = #{fieldId},
+            province = #{province},
+            company = #{company},
+            department = #{department},
+            groupname = #{groupname}
+        WHERE id = #{id}
+    </update>
+    
+    <select id="getUser" resultType="com.example.wmsiescore.model.EtUser">
+        SELECT <include refid="Base_Column_List"/> FROM et_user WHERE id = #{userId}
+    </select>
+    
+    <select id="listUsers" resultType="com.example.wmsiescore.model.EtUser">
+        SELECT <include refid="Base_Column_List"/> FROM et_user
+    </select>
+    
+    <select id="listUsersByPage" resultType="com.example.wmsiescore.model.EtUser">
+        SELECT <include refid="Base_Column_List"/> FROM et_user
+        LIMIT #{offset}, #{limit}
+    </select>
+</mapper>

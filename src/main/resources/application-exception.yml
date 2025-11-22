@@ -1,0 +1,74 @@
+# 异常处理配置
+exception:
+  # 监控配置
+  monitor:
+    enabled: true
+    # 告警阈值 - 单位时间内异常次数超过此值触发告警
+    alert-threshold: 10
+    # 时间窗口 - 分钟
+    time-window-minutes: 5
+    # 告警冷却时间 - 分钟，避免频繁告警
+    alert-cooldown-minutes: 30
+  
+  # 日志配置
+  logging:
+    # 是否记录请求参数
+    include-parameters: true
+    # 是否记录敏感参数（密码、token等）
+    mask-sensitive-params: true
+    # 敏感参数关键词
+    sensitive-keywords: password,token,secret,key,credential
+    # 异常堆栈记录的最大行数
+    max-stack-trace-lines: 50
+  
+  # 响应配置
+  response:
+    # 是否在响应中包含异常详情（生产环境建议关闭）
+    include-exception-details: false
+    # 是否在响应中包含请求ID
+    include-request-id: true
+    # 自定义错误页面
+    error-pages:
+      404: /error/404
+      500: /error/500
+  
+  # 告警配置
+  alert:
+    # 邮件告警
+    email:
+      enabled: false
+      smtp-host: smtp.example.com
+      smtp-port: 587
+      username: alert@example.com
+      password: password
+      recipients: admin@example.com
+    
+    # 短信告警
+    sms:
+      enabled: false
+      provider: aliyun
+      access-key: your-access-key
+      secret-key: your-secret-key
+      phone-numbers: 13800138000
+    
+    # 钉钉告警
+    dingtalk:
+      enabled: false
+      webhook-url: https://oapi.dingtalk.com/robot/send?access_token=your-token
+      secret: your-secret
+    
+    # 企业微信告警
+    wechat:
+      enabled: false
+      webhook-url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=your-key
+
+# 日志级别配置
+logging:
+  level:
+    com.example.wmsiescore.exception: INFO
+    com.example.wmsiescore.util.ExceptionLogUtil: INFO
+    com.example.wmsiescore.util.ExceptionMonitorUtil: INFO
+  pattern:
+    # 日志格式
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n"

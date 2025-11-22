@@ -1,8 +1,7 @@
 package com.example.wmsiescore.dto;
 
 import com.example.wmsiescore.model.EtQuestion;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +12,7 @@ import java.util.List;
  * 试题保存DTO
  * 包含试题基本信息和关联的知识点ID列表
  */
-@ApiModel(value = "QuestionSaveDTO", description = "试题保存DTO，包含试题基本信息和关联的知识点ID列表")
+@Schema(description = "试题保存DTO，包含试题基本信息和关联的知识点ID列表")
 @Data
 public class QuestionSaveDTO extends EtQuestion implements Serializable {
     
@@ -23,16 +22,16 @@ public class QuestionSaveDTO extends EtQuestion implements Serializable {
     /**
      * 操作类型：create/update/delete
      */
-    @ApiModelProperty(value = "操作类型：create/update/delete", example = "create")
+    @Schema(description = "操作类型：create/update/delete", example = "create")
     private String operation;
     
 
     /**
      * 关联的知识点ID列表
      */
-    @ApiModelProperty(value = "关联的知识点ID列表", example = "[1, 2, 3]")
+    @Schema(description = "关联的知识点ID列表", example = "[1, 2, 3]")
     private List<Integer> knowledgePointIds;
 
-    @ApiModelProperty(value = "题库ID", example = "1")
+    @Schema(description = "题库ID", example = "1")
     private Integer fieldIds;
 }

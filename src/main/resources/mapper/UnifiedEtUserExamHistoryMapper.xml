@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtUserExamHistoryDao">
+    <resultMap id="etUserExamHistoryResultMap" type="com.example.wmsiescore.model.EtUserExamHistory">
+        <id property="histId" column="histId" />
+        <result property="userId" column="user_id" />
+        <result property="examPaperId" column="exam_paper_id" />
+        <result property="content" column="content" />
+        <result property="createTime" column="create_time" />
+        <result property="answerSheet" column="answer_sheet" />
+        <result property="duration" column="duration" />
+        <result property="submitTime" column="submit_time" />
+        <result property="pointGet" column="point_get" />
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        histId, user_id, exam_paper_id, content, create_time, answer_sheet, duration, submit_time, point_get
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="histId">
+        INSERT INTO et_user_exam_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="examPaperId != null">exam_paper_id,</if>
+            <if test="content != null">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="answerSheet != null">answer_sheet,</if>
+            <if test="duration != null">duration,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="pointGet != null">point_get,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="examPaperId != null">#{examPaperId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="answerSheet != null">#{answerSheet},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="pointGet != null">#{pointGet},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        INSERT INTO et_user_exam_history (user_id, exam_paper_id, content, create_time, answer_sheet, duration, submit_time, point_get)
+        VALUES (#{userId}, #{examPaperId}, #{content}, #{createTime}, #{answerSheet}, #{duration}, #{submitTime}, #{pointGet})
+        ON DUPLICATE KEY UPDATE
+        content = VALUES(content),
+        answer_sheet = VALUES(answer_sheet),
+        duration = VALUES(duration),
+        submit_time = VALUES(submit_time),
+        point_get = VALUES(point_get)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history
+        <where>
+            <if test="histId != null">histId = #{histId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="content != null and content != ''">
+                AND content LIKE CONCAT('%', #{content}, '%')
+            </if>
+            <if test="submitTime != null">
+                AND submit_time = #{submitTime}
+            </if>
+            <if test="pointGet != null">
+                AND point_get = #{pointGet}
+            </if>
+            <if test="duration != null">
+                AND duration = #{duration}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history
+        <where>
+            <if test="condition.histId != null">histId = #{condition.histId}</if>
+            <if test="condition.userId != null">AND user_id = #{condition.userId}</if>
+            <if test="condition.examPaperId != null">AND exam_paper_id = #{condition.examPaperId}</if>
+            <if test="condition.content != null and condition.content != ''">
+                AND content LIKE CONCAT('%', #{condition.content}, '%')
+            </if>
+            <if test="condition.submitTime != null">
+                AND submit_time = #{condition.submitTime}
+            </if>
+            <if test="condition.pointGet != null">
+                AND point_get = #{condition.pointGet}
+            </if>
+            <if test="condition.duration != null">
+                AND duration = #{condition.duration}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user_exam_history
+        <where>
+            <if test="histId != null">histId = #{histId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="content != null and content != ''">
+                AND content LIKE CONCAT('%', #{content}, '%')
+            </if>
+            <if test="submitTime != null">
+                AND submit_time = #{submitTime}
+            </if>
+            <if test="pointGet != null">
+                AND point_get = #{pointGet}
+            </if>
+            <if test="duration != null">
+                AND duration = #{duration}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_exam_history (user_id, exam_paper_id, content, create_time, answer_sheet, duration, submit_time, point_get)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.examPaperId}, #{item.content}, #{item.createTime}, #{item.answerSheet}, #{item.duration}, #{item.submitTime}, #{item.pointGet})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_user_exam_history WHERE histId IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        UPDATE et_user_exam_history
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="examPaperId != null">exam_paper_id = #{examPaperId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="answerSheet != null">answer_sheet = #{answerSheet},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+            <if test="pointGet != null">point_get = #{pointGet},</if>
+        </set>
+        WHERE histId = #{histId}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <select id="findAll" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_user_exam_history
+    </select>
+
+    <select id="findById" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_user_exam_history WHERE histId = #{histId}
+    </select>
+
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="histId">
+        INSERT INTO et_user_exam_history (user_id, exam_paper_id, content, answer_sheet, duration, submit_time, point_get)
+        VALUES (#{userId}, #{examPaperId}, #{content}, #{answerSheet}, #{duration}, #{submitTime}, #{pointGet})
+    </insert>
+
+    <update id="update" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        UPDATE et_user_exam_history
+        SET user_id = #{userId}, exam_paper_id = #{examPaperId}, content = #{content}, 
+            answer_sheet = #{answerSheet}, duration = #{duration}, submit_time = #{submitTime}, point_get = #{pointGet}
+        WHERE histId = #{histId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM et_user_exam_history WHERE histId = #{histId}
+    </delete>
+
+    <!-- 获取用户考试历史记录 -->
+    <select id="getUserExamHistory" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 获取用户对指定试卷的考试次数 -->
+    <select id="countUserAttempts" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user_exam_history
+        WHERE user_id = #{userId} AND exam_paper_id = #{examPaperId}
+    </select>
+
+    <!-- 获取用户已完成的试卷ID列表 -->
+    <select id="getCompletedExamPaperIds" resultType="java.lang.Long">
+        SELECT DISTINCT exam_paper_id
+        FROM et_user_exam_history
+        WHERE user_id = #{userId} AND submit_time IS NOT NULL
+    </select>
+
+    <!-- 根据用户ID查询用户考试记录，且提交时间不为空 -->
+    <select id="getUserExamHistoryWithSubmitTime" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history
+        WHERE user_id = #{userId} AND submit_time IS NOT NULL
+        ORDER BY submit_time DESC
+    </select>
+</mapper>

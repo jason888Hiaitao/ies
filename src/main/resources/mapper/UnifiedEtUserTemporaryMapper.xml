@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtUserTemporaryDao">
+    <resultMap id="etUserTemporaryResultMap" type="com.example.wmsiescore.model.EtUserTemporary">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+        <result property="addDate" column="add_date" />
+        <result property="expireDate" column="expire_date" />
+        <result property="addBy" column="add_by" />
+        <result property="enabled" column="enabled" />
+        <result property="ifOutSource" column="if_out_source" />
+        <result property="truename" column="truename" />
+        <result property="fieldId" column="field_id" />
+        <result property="province" column="province" />
+        <result property="company" column="company" />
+        <result property="department" column="department" />
+        <result property="groupname" column="groupname" />
+        <result property="temporaryDepartment" column="temporary_department" />
+        <result property="temporaryGroupname" column="temporary_groupname" />
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, 
+        truename, field_id, province, company, department, groupname, temporary_department, temporary_groupname
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserTemporary" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_temporary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="email != null">email,</if>
+            <if test="phone != null">phone,</if>
+            <if test="addDate != null">add_date,</if>
+            <if test="expireDate != null">expire_date,</if>
+            <if test="addBy != null">add_by,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="ifOutSource != null">if_out_source,</if>
+            <if test="truename != null">truename,</if>
+            <if test="fieldId != null">field_id,</if>
+            <if test="province != null">province,</if>
+            <if test="company != null">company,</if>
+            <if test="department != null">department,</if>
+            <if test="groupname != null">groupname,</if>
+            <if test="temporaryDepartment != null">temporary_department,</if>
+            <if test="temporaryGroupname != null">temporary_groupname,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="email != null">#{email},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="addDate != null">#{addDate},</if>
+            <if test="expireDate != null">#{expireDate},</if>
+            <if test="addBy != null">#{addBy},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="ifOutSource != null">#{ifOutSource},</if>
+            <if test="truename != null">#{truename},</if>
+            <if test="fieldId != null">#{fieldId},</if>
+            <if test="province != null">#{province},</if>
+            <if test="company != null">#{company},</if>
+            <if test="department != null">#{department},</if>
+            <if test="groupname != null">#{groupname},</if>
+            <if test="temporaryDepartment != null">#{temporaryDepartment},</if>
+            <if test="temporaryGroupname != null">#{temporaryGroupname},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserTemporary">
+        INSERT INTO et_user_temporary (username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, 
+        truename, field_id, province, company, department, groupname, temporary_department, temporary_groupname)
+        VALUES (#{username}, #{password}, #{email}, #{phone}, #{addDate}, #{expireDate}, #{addBy}, #{enabled}, #{ifOutSource}, 
+        #{truename}, #{fieldId}, #{province}, #{company}, #{department}, #{groupname}, #{temporaryDepartment}, #{temporaryGroupname})
+        ON DUPLICATE KEY UPDATE
+        password = VALUES(password),
+        email = VALUES(email),
+        phone = VALUES(phone),
+        expire_date = VALUES(expire_date),
+        add_by = VALUES(add_by),
+        enabled = VALUES(enabled),
+        if_out_source = VALUES(if_out_source),
+        truename = VALUES(truename),
+        field_id = VALUES(field_id),
+        province = VALUES(province),
+        company = VALUES(company),
+        department = VALUES(department),
+        groupname = VALUES(groupname),
+        temporary_department = VALUES(temporary_department),
+        temporary_groupname = VALUES(temporary_groupname)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="etUserTemporaryResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_temporary
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND email LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test="addBy != null and addBy != ''">
+                AND add_by = #{addBy}
+            </if>
+            <if test="enabled != null">
+                AND enabled = #{enabled}
+            </if>
+            <if test="ifOutSource != null">
+                AND if_out_source = #{ifOutSource}
+            </if>
+            <if test="truename != null and truename != ''">
+                AND truename LIKE CONCAT('%', #{truename}, '%')
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="province != null and province != ''">
+                AND province = #{province}
+            </if>
+            <if test="company != null and company != ''">
+                AND company = #{company}
+            </if>
+            <if test="department != null and department != ''">
+                AND department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND groupname = #{groupname}
+            </if>
+            <if test="temporaryDepartment != null and temporaryDepartment != ''">
+                AND temporary_department = #{temporaryDepartment}
+            </if>
+            <if test="temporaryGroupname != null and temporaryGroupname != ''">
+                AND temporary_groupname = #{temporaryGroupname}
+            </if>
+        </where>
+        ORDER BY add_date DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="etUserTemporaryResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_temporary
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.username != null and condition.username != ''">
+                AND username LIKE CONCAT('%', #{condition.username}, '%')
+            </if>
+            <if test="condition.email != null and condition.email != ''">
+                AND email LIKE CONCAT('%', #{condition.email}, '%')
+            </if>
+            <if test="condition.phone != null and condition.phone != ''">
+                AND phone LIKE CONCAT('%', #{condition.phone}, '%')
+            </if>
+            <if test="condition.addBy != null and condition.addBy != ''">
+                AND add_by = #{condition.addBy}
+            </if>
+            <if test="condition.enabled != null">
+                AND enabled = #{condition.enabled}
+            </if>
+            <if test="condition.ifOutSource != null">
+                AND if_out_source = #{condition.ifOutSource}
+            </if>
+            <if test="condition.truename != null and condition.truename != ''">
+                AND truename LIKE CONCAT('%', #{condition.truename}, '%')
+            </if>
+            <if test="condition.fieldId != null">
+                AND field_id = #{condition.fieldId}
+            </if>
+            <if test="condition.province != null and condition.province != ''">
+                AND province = #{condition.province}
+            </if>
+            <if test="condition.company != null and condition.company != ''">
+                AND company = #{condition.company}
+            </if>
+            <if test="condition.department != null and condition.department != ''">
+                AND department = #{condition.department}
+            </if>
+            <if test="condition.groupname != null and condition.groupname != ''">
+                AND groupname = #{condition.groupname}
+            </if>
+            <if test="condition.temporaryDepartment != null and condition.temporaryDepartment != ''">
+                AND temporary_department = #{condition.temporaryDepartment}
+            </if>
+            <if test="condition.temporaryGroupname != null and condition.temporaryGroupname != ''">
+                AND temporary_groupname = #{condition.temporaryGroupname}
+            </if>
+        </where>
+        ORDER BY add_date DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user_temporary
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND email LIKE CONCAT('%', #{email}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test="addBy != null and addBy != ''">
+                AND add_by = #{addBy}
+            </if>
+            <if test="enabled != null">
+                AND enabled = #{enabled}
+            </if>
+            <if test="ifOutSource != null">
+                AND if_out_source = #{ifOutSource}
+            </if>
+            <if test="truename != null and truename != ''">
+                AND truename LIKE CONCAT('%', #{truename}, '%')
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="province != null and province != ''">
+                AND province = #{province}
+            </if>
+            <if test="company != null and company != ''">
+                AND company = #{company}
+            </if>
+            <if test="department != null and department != ''">
+                AND department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND groupname = #{groupname}
+            </if>
+            <if test="temporaryDepartment != null and temporaryDepartment != ''">
+                AND temporary_department = #{temporaryDepartment}
+            </if>
+            <if test="temporaryGroupname != null and temporaryGroupname != ''">
+                AND temporary_groupname = #{temporaryGroupname}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_temporary (username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, 
+        truename, field_id, province, company, department, groupname, temporary_department, temporary_groupname)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.username}, #{item.password}, #{item.email}, #{item.phone}, #{item.addDate}, #{item.expireDate}, 
+             #{item.addBy}, #{item.enabled}, #{item.ifOutSource}, #{item.truename}, #{item.fieldId}, 
+             #{item.province}, #{item.company}, #{item.department}, #{item.groupname}, 
+             #{item.temporaryDepartment}, #{item.temporaryGroupname})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_user_temporary WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtUserTemporary">
+        UPDATE et_user_temporary
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="addDate != null">add_date = #{addDate},</if>
+            <if test="expireDate != null">expire_date = #{expireDate},</if>
+            <if test="addBy != null">add_by = #{addBy},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="ifOutSource != null">if_out_source = #{ifOutSource},</if>
+            <if test="truename != null">truename = #{truename},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="company != null">company = #{company},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="groupname != null">groupname = #{groupname},</if>
+            <if test="temporaryDepartment != null">temporary_department = #{temporaryDepartment},</if>
+            <if test="temporaryGroupname != null">temporary_groupname = #{temporaryGroupname},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <select id="findAll" resultMap="etUserTemporaryResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_user_temporary
+    </select>
+
+    <select id="findById" resultMap="etUserTemporaryResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_user_temporary WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtUserTemporary" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_temporary (username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, truename, field_id, province, company, department, groupname, temporary_department, temporary_groupname)
+        VALUES (#{username}, #{password}, #{email}, #{phone}, #{addDate}, #{expireDate}, #{addBy}, #{enabled}, #{ifOutSource}, #{truename}, #{fieldId}, #{province}, #{company}, #{department}, #{groupname}, #{temporaryDepartment}, #{temporaryGroupname})
+    </insert>
+
+    <update id="update" parameterType="com.example.wmsiescore.model.EtUserTemporary">
+        UPDATE et_user_temporary
+        SET username = #{username}, password = #{password}, email = #{email}, phone = #{phone}, add_date = #{addDate}, expire_date = #{expireDate}, add_by = #{addBy}, enabled = #{enabled}, if_out_source = #{ifOutSource}, truename = #{truename}, field_id = #{fieldId}, province = #{province}, company = #{company}, department = #{department}, groupname = #{groupname}, temporary_department = #{temporaryDepartment}, temporary_groupname = #{temporaryGroupname}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM et_user_temporary WHERE id = #{id}
+    </delete>
+</mapper>

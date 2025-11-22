@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtQuestion2PointDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtQuestion2Point">
+        <id column="question_2_point_id" property="question2PointId" jdbcType="INTEGER"/>
+        <result column="question_id" property="questionId" jdbcType="INTEGER"/>
+        <result column="point_id" property="pointId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        question_2_point_id, question_id, point_id
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        ORDER BY question_2_point_id
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_2_point_id = #{question2PointId,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtQuestion2Point" useGeneratedKeys="true" keyProperty="question2PointId">
+        INSERT INTO et_question_2_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">question_id,</if>
+            <if test="pointId != null">point_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">#{questionId,jdbcType=INTEGER},</if>
+            <if test="pointId != null">#{pointId,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtQuestion2Point" useGeneratedKeys="true" keyProperty="question2PointId">
+        INSERT INTO et_question_2_point (question_id, point_id)
+        VALUES (#{questionId,jdbcType=INTEGER}, #{pointId,jdbcType=INTEGER})
+        ON DUPLICATE KEY UPDATE
+        question_id = VALUES(question_id),
+        point_id = VALUES(point_id)
+    </insert>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        <where>
+            <if test="question2PointId != null">AND question_2_point_id = #{question2PointId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        <where>
+            <if test="question2PointId != null">AND question_2_point_id = #{question2PointId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_question_2_point
+        <where>
+            <if test="question2PointId != null">AND question_2_point_id = #{question2PointId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_question_2_point (question_id, point_id)
+        VALUES
+        <foreach collection="question2Points" item="item" separator=",">
+            (#{item.questionId,jdbcType=INTEGER}, #{item.pointId,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_question_2_point WHERE question_2_point_id IN
+        <foreach collection="question2PointIds" item="question2PointId" open="(" separator="," close=")">
+            #{question2PointId,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_question_2_point
+        <set>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="pointId != null">point_id = #{pointId},</if>
+        </set>
+        WHERE question_2_point_id = #{question2PointId}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtQuestion2Point">
+        UPDATE et_question_2_point
+        SET question_id = #{questionId,jdbcType=INTEGER},
+            point_id = #{pointId,jdbcType=INTEGER}
+        WHERE question_2_point_id = #{question2PointId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM et_question_2_point WHERE question_2_point_id = #{question2PointId,jdbcType=INTEGER}
+    </delete>
+
+    <select id="selectByQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_id = #{questionId,jdbcType=INTEGER}
+        ORDER BY question_2_point_id
+    </select>
+
+    <select id="selectByPointId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE point_id = #{pointId,jdbcType=INTEGER}
+        ORDER BY question_2_point_id
+    </select>
+
+    <select id="selectByQuestionIdAndPointId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_id = #{questionId,jdbcType=INTEGER} AND point_id = #{pointId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByQuestionIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_id IN
+        <foreach collection="questionIds" item="questionId" open="(" separator="," close=")">
+            #{questionId,jdbcType=INTEGER}
+        </foreach>
+        ORDER BY question_2_point_id
+    </select>
+
+    <select id="selectByPointIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE point_id IN
+        <foreach collection="pointIds" item="pointId" open="(" separator="," close=")">
+            #{pointId,jdbcType=INTEGER}
+        </foreach>
+        ORDER BY question_2_point_id
+    </select>
+
+    <delete id="deleteByQuestionId" parameterType="java.lang.Integer">
+        DELETE FROM et_question_2_point WHERE question_id = #{questionId,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByPointId" parameterType="java.lang.Integer">
+        DELETE FROM et_question_2_point WHERE point_id = #{pointId,jdbcType=INTEGER}
+    </delete>
+
+</mapper>

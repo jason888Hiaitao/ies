@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtUserGroupDao">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUserGroup">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, group_name, description, creator, create_time
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">group_name,</if>
+            <if test="description != null">description,</if>
+            <if test="creator != null">creator,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">#{groupName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group (group_name, description, creator, create_time)
+        VALUES (#{groupName}, #{description}, #{creator}, #{createTime})
+        ON DUPLICATE KEY UPDATE
+        group_name = VALUES(group_name),
+        description = VALUES(description),
+        creator = VALUES(creator),
+        create_time = VALUES(create_time)
+    </insert>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="groupName != null and groupName != ''">AND group_name = #{groupName}</if>
+            <if test="description != null and description != ''">AND description = #{description}</if>
+            <if test="creator != null and creator != ''">AND creator = #{creator}</if>
+            <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="groupName != null and groupName != ''">AND group_name = #{groupName}</if>
+            <if test="description != null and description != ''">AND description = #{description}</if>
+            <if test="creator != null and creator != ''">AND creator = #{creator}</if>
+            <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_user_group
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="groupName != null and groupName != ''">AND group_name = #{groupName}</if>
+            <if test="description != null and description != ''">AND description = #{description}</if>
+            <if test="creator != null and creator != ''">AND creator = #{creator}</if>
+            <if test="createTime != null and createTime != ''">AND create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_group (group_name, description, creator, create_time)
+        VALUES
+        <foreach collection="userGroups" item="group" separator=",">
+            (#{group.groupName}, #{group.description}, #{group.creator}, #{group.createTime})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_user_group WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_user_group
+        <set>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtUserGroup">
+        UPDATE et_user_group 
+        SET group_name = #{groupName}, 
+            description = #{description}, 
+            creator = #{creator}, 
+            create_time = #{createTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_user_group WHERE id = #{id}
+    </delete>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        WHERE group_name = #{groupName}
+    </select>
+
+    <select id="selectByCreator" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        WHERE creator = #{creator}
+    </select>
+
+    <select id="selectByNameLike" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group 
+        WHERE group_name LIKE CONCAT('%', #{groupName}, '%')
+    </select>
+</mapper>

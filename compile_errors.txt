@@ -1,0 +1,352 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:wms-ies-core >----------------------
+[INFO] Building wms-ies-core 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ wms-ies-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 2 resources
+[INFO] Copying 32 resources
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ wms-ies-core ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 156 source files to d:\WorkSpace\JavaProject\wms-ies-core\target\classes
+[INFO] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/ExamServiceImpl.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/ExamServiceImpl.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 某些消息已经过简化; 请使用 -Xdiags:verbose 重新编译以获得完整输出
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/ExamServiceImpl.java:[522,70] 找不到符号
+  符号:   方法 getPendingExamsForUser(java.lang.Long)
+  位置: 类型为com.example.wmsiescore.dao.UnifiedEtExamPaperDao的变量 unifiedEtExamPaperDao
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/ExamServiceImpl.java:[547,35] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.ExamServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[89,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[94,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[98,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[103,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[108,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[113,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[117,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[121,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[128,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[133,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[138,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[144,9] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[153,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[158,16] 找不到符号
+  符号:   变量 etExamAnalysisMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[85,51] 不兼容的类型: long无法转换为java.lang.Integer
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[97,91] 不兼容的类型: 推论变量T具有不兼容的限制范围
+    等式约束条件: java.lang.Integer
+    下限: java.lang.Long
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[109,54] 不兼容的类型: long无法转换为java.lang.Integer
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[119,16] 找不到符号
+  符号:   变量 etFieldMapper
+  位置: 类 com.example.wmsiescore.service.impl.AdminFieldServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtUserExamHistoryServiceImpl.java:[92,53] 找不到符号
+  符号:   类 ArrayList
+  位置: 类 com.example.wmsiescore.service.impl.EtUserExamHistoryServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtUserExamHistoryServiceImpl.java:[106,53] 找不到符号
+  符号:   类 ArrayList
+  位置: 类 com.example.wmsiescore.service.impl.EtUserExamHistoryServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtUserExamHistoryServiceImpl.java:[134,43] 找不到符号
+  符号:   类 ArrayList
+  位置: 类 com.example.wmsiescore.service.impl.EtUserExamHistoryServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[45,9] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[53,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[60,56] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[62,13] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[65,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[70,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[75,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[80,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[85,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[90,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[95,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[100,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[105,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[111,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[117,16] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[124,40] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[136,32] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[140,9] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[147,16] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[152,16] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[159,35] 找不到符号
+  符号:   变量 etQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[179,16] 找不到符号
+  符号:   变量 etExamPaperQuestionMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[185,33] 找不到符号
+  符号:   变量 etExamPaperMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[192,16] 找不到符号
+  符号:   变量 etExamPaperMapper
+  位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[32,22] 找不到符号
+  符号:   变量 etExamPaperDao
+  位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[41,43] 找不到符号
+  符号:   变量 etExamPaperDao
+  位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[84,17] 找不到符号
+  符号:   变量 etExamPaperDao
+  位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[121,20] 找不到符号
+  符号:   变量 etExamPaperDao
+  位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[154,20] 找不到符号
+  符号:   变量 etExamPaperDao
+  位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[165,20] 找不到符号
+  符号:   变量 etExamPaperDao
+  位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminQuestionServiceImpl.java:[44,59] 不兼容的类型: java.lang.Integer无法转换为java.lang.Long
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminQuestionServiceImpl.java:[97,59] 不兼容的类型: java.lang.Integer无法转换为java.lang.Long
+[INFO] 55 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.276 s
+[INFO] Finished at: 2025-11-16T22:42:48+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.10.1:compile (default-compile) on project wms-ies-core: Compilation failure: Compilation failure: 
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/ExamServiceImpl.java:[522,70] 找不到符号
+[ERROR]   符号:   方法 getPendingExamsForUser(java.lang.Long)
+[ERROR]   位置: 类型为com.example.wmsiescore.dao.UnifiedEtExamPaperDao的变量 unifiedEtExamPaperDao
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/ExamServiceImpl.java:[547,35] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.ExamServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[89,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[94,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[98,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[103,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[108,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[113,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[117,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[121,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[128,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[133,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[138,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[144,9] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[153,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtExamAnalysisServiceImpl.java:[158,16] 找不到符号
+[ERROR]   符号:   变量 etExamAnalysisMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtExamAnalysisServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[85,51] 不兼容的类型: long无法转换为java.lang.Integer
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[97,91] 不兼容的类型: 推论变量T具有不兼容的限制范围
+[ERROR]     等式约束条件: java.lang.Integer
+[ERROR]     下限: java.lang.Long
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[109,54] 不兼容的类型: long无法转换为java.lang.Integer
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminFieldServiceImpl.java:[119,16] 找不到符号
+[ERROR]   符号:   变量 etFieldMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminFieldServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtUserExamHistoryServiceImpl.java:[92,53] 找不到符号
+[ERROR]   符号:   类 ArrayList
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtUserExamHistoryServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtUserExamHistoryServiceImpl.java:[106,53] 找不到符号
+[ERROR]   符号:   类 ArrayList
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtUserExamHistoryServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtUserExamHistoryServiceImpl.java:[134,43] 找不到符号
+[ERROR]   符号:   类 ArrayList
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtUserExamHistoryServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[45,9] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[53,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[60,56] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[62,13] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[65,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[70,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[75,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[80,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[85,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[90,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[95,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[100,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[105,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[111,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[117,16] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[124,40] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[136,32] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[140,9] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[147,16] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[152,16] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[159,35] 找不到符号
+[ERROR]   符号:   变量 etQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[179,16] 找不到符号
+[ERROR]   符号:   变量 etExamPaperQuestionMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[185,33] 找不到符号
+[ERROR]   符号:   变量 etExamPaperMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/EtQuestionServiceImpl.java:[192,16] 找不到符号
+[ERROR]   符号:   变量 etExamPaperMapper
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.EtQuestionServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[32,22] 找不到符号
+[ERROR]   符号:   变量 etExamPaperDao
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[41,43] 找不到符号
+[ERROR]   符号:   变量 etExamPaperDao
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[84,17] 找不到符号
+[ERROR]   符号:   变量 etExamPaperDao
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[121,20] 找不到符号
+[ERROR]   符号:   变量 etExamPaperDao
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[154,20] 找不到符号
+[ERROR]   符号:   变量 etExamPaperDao
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminExamPaperServiceImpl.java:[165,20] 找不到符号
+[ERROR]   符号:   变量 etExamPaperDao
+[ERROR]   位置: 类 com.example.wmsiescore.service.impl.AdminExamPaperServiceImpl
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminQuestionServiceImpl.java:[44,59] 不兼容的类型: java.lang.Integer无法转换为java.lang.Long
+[ERROR] /d:/WorkSpace/JavaProject/wms-ies-core/src/main/java/com/example/wmsiescore/service/impl/AdminQuestionServiceImpl.java:[97,59] 不兼容的类型: java.lang.Integer无法转换为java.lang.Long
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

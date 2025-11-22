@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtUserGroupMemberDao">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUserGroupMember">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_group_id" property="userGroupId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="role" property="role" jdbcType="VARCHAR"/>
+        <result column="join_time" property="joinTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_group_id, user_id, role, join_time
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserGroupMember" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userGroupId != null">user_group_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="role != null">role,</if>
+            <if test="joinTime != null">join_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="userGroupId != null">#{userGroupId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="role != null">#{role},</if>
+            <if test="joinTime != null">#{joinTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserGroupMember" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group_member (user_group_id, user_id, role, join_time)
+        VALUES (#{userGroupId}, #{userId}, #{role}, #{joinTime})
+        ON DUPLICATE KEY UPDATE
+        user_group_id = VALUES(user_group_id),
+        user_id = VALUES(user_id),
+        role = VALUES(role),
+        join_time = VALUES(join_time)
+    </insert>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="userGroupId != null">AND user_group_id = #{userGroupId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="role != null and role != ''">AND role = #{role}</if>
+            <if test="joinTime != null and joinTime != ''">AND join_time = #{joinTime}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="userGroupId != null">AND user_group_id = #{userGroupId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="role != null and role != ''">AND role = #{role}</if>
+            <if test="joinTime != null and joinTime != ''">AND join_time = #{joinTime}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_user_group_member
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="userGroupId != null">AND user_group_id = #{userGroupId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="role != null and role != ''">AND role = #{role}</if>
+            <if test="joinTime != null and joinTime != ''">AND join_time = #{joinTime}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_group_member (user_group_id, user_id, role, join_time)
+        VALUES
+        <foreach collection="userGroupMembers" item="member" separator=",">
+            (#{member.userGroupId}, #{member.userId}, #{member.role}, #{member.joinTime})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_user_group_member WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_user_group_member
+        <set>
+            <if test="userGroupId != null">user_group_id = #{userGroupId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtUserGroupMember">
+        UPDATE et_user_group_member 
+        SET user_group_id = #{userGroupId}, 
+            user_id = #{userId}, 
+            role = #{role}, 
+            join_time = #{joinTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_user_group_member WHERE id = #{id}
+    </delete>
+
+    <select id="selectByUserGroupId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE user_group_id = #{userGroupId}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectByRole" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE role = #{role}
+    </select>
+
+    <select id="selectByUserGroupIdAndUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE user_group_id = #{userGroupId} AND user_id = #{userId}
+    </select>
+</mapper>

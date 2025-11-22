@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtExamPaperDao">
+    <!-- 结果映射 -->
+    <resultMap id="EtExamPaperResult" type="com.example.wmsiescore.model.EtExamPaper">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="content" property="content" />
+        <result column="duration" property="duration" />
+        <result column="pass_point" property="passPoint" />
+        <result column="total_point" property="totalPoint" />
+        <result column="status" property="status" />
+        <result column="summary" property="summary" />
+        <result column="is_visible" property="isVisible" />
+        <result column="answer_sheet" property="answerSheet" />
+        <result column="group_id" property="groupId" />
+        <result column="is_subjective" property="isSubjective" />
+        <result column="creator" property="creator" />
+        <result column="paper_type" property="paperType" />
+        <result column="field_id" property="fieldId" />
+        <result column="validsource" property="validsource" />
+        <result column="validdpt" property="validdpt" />
+        <result column="exam_count" property="examCount" />
+        <result column="answer_hide" property="answerHide" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, name, content, duration, pass_point, total_point, status, summary, 
+        is_visible, answer_sheet, group_id, is_subjective, creator, 
+        paper_type, field_id, validsource, validdpt, exam_count, answer_hide, 
+        create_time, update_time
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtExamPaper" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_exam_paper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="content != null">content,</if>
+            <if test="duration != null">duration,</if>
+            <if test="passPoint != null">pass_point,</if>
+            <if test="totalPoint != null">total_point,</if>
+            <if test="status != null">status,</if>
+            <if test="summary != null">summary,</if>
+            <if test="isVisible != null">is_visible,</if>
+            <if test="answerSheet != null">answer_sheet,</if>
+            <if test="groupId != null">group_id,</if>
+            <if test="isSubjective != null">is_subjective,</if>
+            <if test="creator != null">creator,</if>
+            <if test="paperType != null">paper_type,</if>
+            <if test="fieldId != null">field_id,</if>
+            <if test="validsource != null">validsource,</if>
+            <if test="validdpt != null">validdpt,</if>
+            <if test="examCount != null">exam_count,</if>
+            <if test="answerHide != null">answer_hide,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="content != null">#{content},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="passPoint != null">#{passPoint},</if>
+            <if test="totalPoint != null">#{totalPoint},</if>
+            <if test="status != null">#{status},</if>
+            <if test="summary != null">#{summary},</if>
+            <if test="isVisible != null">#{isVisible},</if>
+            <if test="answerSheet != null">#{answerSheet},</if>
+            <if test="groupId != null">#{groupId},</if>
+            <if test="isSubjective != null">#{isSubjective},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="paperType != null">#{paperType},</if>
+            <if test="fieldId != null">#{fieldId},</if>
+            <if test="validsource != null">#{validsource},</if>
+            <if test="validdpt != null">#{validdpt},</if>
+            <if test="examCount != null">#{examCount},</if>
+            <if test="answerHide != null">#{answerHide},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtExamPaper">
+        INSERT INTO et_exam_paper (name, content, duration, pass_point, total_point, status, summary, 
+        is_visible, answer_sheet, group_id, is_subjective, creator, 
+        paper_type, field_id, validsource, validdpt, exam_count, answer_hide, 
+        create_time, update_time)
+        VALUES (#{name}, #{content}, #{duration}, #{passPoint}, #{totalPoint}, #{status}, #{summary}, 
+        #{isVisible}, #{answerSheet}, #{groupId}, #{isSubjective}, #{creator}, 
+        #{paperType}, #{fieldId}, #{validsource}, #{validdpt}, #{examCount}, #{answerHide}, 
+        #{createTime}, #{updateTime})
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        content = VALUES(content),
+        duration = VALUES(duration),
+        pass_point = VALUES(pass_point),
+        total_point = VALUES(total_point),
+        status = VALUES(status),
+        summary = VALUES(summary),
+        is_visible = VALUES(is_visible),
+        answer_sheet = VALUES(answer_sheet),
+        group_id = VALUES(group_id),
+        is_subjective = VALUES(is_subjective),
+        creator = VALUES(creator),
+        paper_type = VALUES(paper_type),
+        field_id = VALUES(field_id),
+        validsource = VALUES(validsource),
+        validdpt = VALUES(validdpt),
+        exam_count = VALUES(exam_count),
+        answer_hide = VALUES(answer_hide),
+        update_time = VALUES(update_time)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="validdpt != null and validdpt != ''">
+                AND validdpt = #{validdpt}
+            </if>
+            <if test="validsource != null and validsource != ''">
+                AND validsource = #{validsource}
+            </if>
+            <if test="paperType != null and paperType != ''">
+                AND paper_type = #{paperType}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="isSubjective != null">
+                AND is_subjective = #{isSubjective}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND creator = #{creator}
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.name != null and condition.name != ''">
+                AND name LIKE CONCAT('%', #{condition.name}, '%')
+            </if>
+            <if test="condition.status != null and condition.status != ''">
+                AND status = #{condition.status}
+            </if>
+            <if test="condition.validdpt != null and condition.validdpt != ''">
+                AND validdpt = #{condition.validdpt}
+            </if>
+            <if test="condition.validsource != null and condition.validsource != ''">
+                AND validsource = #{condition.validsource}
+            </if>
+            <if test="condition.paperType != null and condition.paperType != ''">
+                AND paper_type = #{condition.paperType}
+            </if>
+            <if test="condition.isVisible != null">
+                AND is_visible = #{condition.isVisible}
+            </if>
+            <if test="condition.isSubjective != null">
+                AND is_subjective = #{condition.isSubjective}
+            </if>
+            <if test="condition.creator != null and condition.creator != ''">
+                AND creator = #{condition.creator}
+            </if>
+            <if test="condition.fieldId != null">
+                AND field_id = #{condition.fieldId}
+            </if>
+            <if test="condition.groupId != null">
+                AND group_id = #{condition.groupId}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_exam_paper
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="validdpt != null and validdpt != ''">
+                AND validdpt = #{validdpt}
+            </if>
+            <if test="validsource != null and validsource != ''">
+                AND validsource = #{validsource}
+            </if>
+            <if test="paperType != null and paperType != ''">
+                AND paper_type = #{paperType}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="isSubjective != null">
+                AND is_subjective = #{isSubjective}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND creator = #{creator}
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_exam_paper (name, content, duration, pass_point, total_point, status, summary, 
+        is_visible, answer_sheet, group_id, is_subjective, creator, 
+        paper_type, field_id, validsource, validdpt, exam_count, answer_hide, 
+        create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name}, #{item.content}, #{item.duration}, #{item.passPoint}, #{item.totalPoint}, 
+             #{item.status}, #{item.summary}, #{item.isVisible}, #{item.answerSheet}, 
+             #{item.groupId}, #{item.isSubjective}, #{item.creator}, #{item.paperType}, 
+             #{item.fieldId}, #{item.validsource}, #{item.validdpt}, #{item.examCount}, 
+             #{item.answerHide}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_exam_paper WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtExamPaper">
+        UPDATE et_exam_paper
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="passPoint != null">pass_point = #{passPoint},</if>
+            <if test="totalPoint != null">total_point = #{totalPoint},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="answerSheet != null">answer_sheet = #{answerSheet},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="isSubjective != null">is_subjective = #{isSubjective},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="paperType != null">paper_type = #{paperType},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="validsource != null">validsource = #{validsource},</if>
+            <if test="validdpt != null">validdpt = #{validdpt},</if>
+            <if test="examCount != null">exam_count = #{examCount},</if>
+            <if test="answerHide != null">answer_hide = #{answerHide},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtExamPaper" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_exam_paper (
+            name, content, duration, pass_point, total_point, status, summary, 
+            is_visible, answer_sheet, group_id, is_subjective, creator, 
+            paper_type, field_id, validsource, validdpt, exam_count, answer_hide, 
+            create_time, update_time
+        ) VALUES (
+            #{name}, #{content}, #{duration}, #{passPoint}, #{totalPoint}, #{status}, #{summary}, 
+            #{isVisible}, #{answerSheet}, #{groupId}, #{isSubjective}, #{creator}, 
+            #{paperType}, #{fieldId}, #{validsource}, #{validdpt}, #{examCount}, #{answerHide}, 
+            #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM et_exam_paper WHERE id = #{id}
+    </delete>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtExamPaper">
+        UPDATE et_exam_paper
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="passPoint != null">pass_point = #{passPoint},</if>
+            <if test="totalPoint != null">total_point = #{totalPoint},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="answerSheet != null">answer_sheet = #{answerSheet},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="isSubjective != null">is_subjective = #{isSubjective},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="paperType != null">paper_type = #{paperType},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="validsource != null">validsource = #{validsource},</if>
+            <if test="validdpt != null">validdpt = #{validdpt},</if>
+            <if test="examCount != null">exam_count = #{examCount},</if>
+            <if test="answerHide != null">answer_hide = #{answerHide},</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectExamPaperList" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="validdpt != null and validdpt != ''">
+                AND validdpt = #{validdpt}
+            </if>
+            <if test="validsource != null and validsource != ''">
+                AND validsource = #{validsource}
+            </if>
+            <if test="paperType != null and paperType != ''">
+                AND paper_type = #{paperType}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countExamPaperList" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM et_exam_paper
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="validdpt != null and validdpt != ''">
+                AND validdpt = #{validdpt}
+            </if>
+            <if test="validsource != null and validsource != ''">
+                AND validsource = #{validsource}
+            </if>
+            <if test="paperType != null and paperType != ''">
+                AND paper_type = #{paperType}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 获取用户可见的试卷列表 -->
+    <select id="getVisibleExamPapersForUser" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        WHERE is_visible = 1 
+          AND status = '1'
+          AND (validdpt = #{userId} OR validsource = #{userId})
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据部门获取用户可见的试卷列表 -->
+    <select id="getExamPapersByUserAndDepartment" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        WHERE is_visible = 1 
+          AND status = '1'
+          AND validdpt = #{department}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据领域ID列表获取试卷列表 -->
+    <select id="getExamPapersByFieldIds" resultMap="EtExamPaperResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper
+        WHERE is_visible = 1 
+          AND status = '1'
+          AND field_id IN
+        <foreach collection="fieldIds" item="fieldId" open="(" separator="," close=")">
+            #{fieldId}
+        </foreach>
+        ORDER BY create_time DESC
+    </select>
+</mapper>

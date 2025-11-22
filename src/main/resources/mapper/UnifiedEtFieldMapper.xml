@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtFieldMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtField">
+        <id column="field_id" property="fieldId" jdbcType="INTEGER"/>
+        <result column="field_name" property="fieldName" jdbcType="VARCHAR"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        field_id, field_name, memo, state
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtField" useGeneratedKeys="true" keyProperty="fieldId">
+        INSERT INTO et_field
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fieldName != null">field_name,</if>
+            <if test="memo != null">memo,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="fieldName != null">#{fieldName},</if>
+            <if test="memo != null">#{memo},</if>
+            <if test="state != null">#{state},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtField">
+        INSERT INTO et_field (field_name, memo, state)
+        VALUES (#{fieldName}, #{memo}, #{state})
+        ON DUPLICATE KEY UPDATE
+        field_name = VALUES(field_name),
+        memo = VALUES(memo),
+        state = VALUES(state)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        <where>
+            <if test="fieldId != null">field_id = #{fieldId}</if>
+            <if test="fieldName != null and fieldName != ''">
+                AND field_name LIKE CONCAT('%', #{fieldName}, '%')
+            </if>
+            <if test="memo != null and memo != ''">
+                AND memo LIKE CONCAT('%', #{memo}, '%')
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        ORDER BY field_id ASC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        <where>
+            <if test="condition.fieldId != null">field_id = #{condition.fieldId}</if>
+            <if test="condition.fieldName != null and condition.fieldName != ''">
+                AND field_name LIKE CONCAT('%', #{condition.fieldName}, '%')
+            </if>
+            <if test="condition.memo != null and condition.memo != ''">
+                AND memo LIKE CONCAT('%', #{condition.memo}, '%')
+            </if>
+            <if test="condition.state != null">
+                AND state = #{condition.state}
+            </if>
+        </where>
+        ORDER BY field_id ASC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_field
+        <where>
+            <if test="fieldId != null">field_id = #{fieldId}</if>
+            <if test="fieldName != null and fieldName != ''">
+                AND field_name LIKE CONCAT('%', #{fieldName}, '%')
+            </if>
+            <if test="memo != null and memo != ''">
+                AND memo LIKE CONCAT('%', #{memo}, '%')
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_field (field_name, memo, state)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.fieldName}, #{item.memo}, #{item.state})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_field WHERE field_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtField">
+        UPDATE et_field
+        <set>
+            <if test="fieldName != null">field_name = #{fieldName},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        WHERE field_id = #{fieldId}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM et_field
+        <where>
+            <if test="field.fieldName != null and field.fieldName != ''">
+                AND field_name LIKE CONCAT('%', #{field.fieldName}, '%')
+            </if>
+            <if test="field.state != null">
+                AND state = #{field.state}
+            </if>
+        </where>
+        ORDER BY field_id ASC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM et_field
+        WHERE field_id = #{fieldId}
+    </select>
+
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtField" useGeneratedKeys="true" keyProperty="fieldId">
+        INSERT INTO et_field (
+            field_name, memo, state
+        ) VALUES (
+            #{fieldName}, #{memo}, #{state}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtField">
+        UPDATE et_field
+        <set>
+            <if test="fieldName != null">field_name = #{fieldName},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        WHERE field_id = #{fieldId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_field WHERE field_id = #{fieldId}
+    </delete>
+
+    <delete id="deleteBatchIds">
+        DELETE FROM et_field WHERE field_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM et_field
+        where state = 1
+        ORDER BY field_id ASC
+    </select>
+</mapper>

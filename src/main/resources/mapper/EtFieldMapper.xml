@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtFieldDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtField">
+        <id column="field_id" property="fieldId" jdbcType="INTEGER"/>
+        <result column="field_name" property="fieldName" jdbcType="VARCHAR"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        field_id, field_name, memo, state
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        ORDER BY field_id ASC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        WHERE field_id = #{fieldId}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtField" useGeneratedKeys="true" keyProperty="fieldId">
+        INSERT INTO et_field
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fieldName != null">field_name,</if>
+            <if test="memo != null">memo,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="fieldName != null">#{fieldName},</if>
+            <if test="memo != null">#{memo},</if>
+            <if test="state != null">#{state},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtField" useGeneratedKeys="true" keyProperty="fieldId">
+        INSERT INTO et_field (field_name, memo, state)
+        VALUES (#{fieldName}, #{memo}, #{state})
+        ON DUPLICATE KEY UPDATE
+        field_name = VALUES(field_name),
+        memo = VALUES(memo),
+        state = VALUES(state)
+    </insert>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        <where>
+            <if test="fieldId != null">AND field_id = #{fieldId}</if>
+            <if test="fieldName != null and fieldName != ''">AND field_name = #{fieldName}</if>
+            <if test="memo != null and memo != ''">AND memo = #{memo}</if>
+            <if test="state != null">AND state = #{state}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        <where>
+            <if test="fieldId != null">AND field_id = #{fieldId}</if>
+            <if test="fieldName != null and fieldName != ''">AND field_name = #{fieldName}</if>
+            <if test="memo != null and memo != ''">AND memo = #{memo}</if>
+            <if test="state != null">AND state = #{state}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_field
+        <where>
+            <if test="fieldId != null">AND field_id = #{fieldId}</if>
+            <if test="fieldName != null and fieldName != ''">AND field_name = #{fieldName}</if>
+            <if test="memo != null and memo != ''">AND memo = #{memo}</if>
+            <if test="state != null">AND state = #{state}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_field (field_name, memo, state)
+        VALUES
+        <foreach collection="fields" item="field" separator=",">
+            (#{field.fieldName}, #{field.memo}, #{field.state})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_field WHERE field_id IN
+        <foreach collection="fieldIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_field
+        <set>
+            <if test="fieldName != null">field_name = #{fieldName},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state},</if>
+        </set>
+        WHERE field_id = #{fieldId}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtField">
+        UPDATE et_field
+        <set>
+            <if test="fieldName != null">field_name = #{fieldName},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        WHERE field_id = #{fieldId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_field WHERE field_id = #{fieldId}
+    </delete>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        WHERE field_name = #{fieldName}
+    </select>
+
+    <select id="selectByState" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        WHERE state = #{state}
+    </select>
+
+    <select id="selectByNameLike" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_field
+        WHERE field_name LIKE CONCAT('%', #{fieldName}, '%')
+    </select>
+
+</mapper>

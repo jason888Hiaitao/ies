@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtUserGroupMemberMapper">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUserGroupMember">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="group_id" property="groupId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, group_id, user_id, user_name, user_account, status, create_time, update_time
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserGroupMember" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">group_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userAccount != null">user_account,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">#{groupId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userAccount != null">#{userAccount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserGroupMember">
+        INSERT INTO et_user_group_member (group_id, user_id, user_name, user_account, status, create_time, update_time)
+        VALUES (#{groupId}, #{userId}, #{userName}, #{userAccount}, #{status}, #{createTime}, #{updateTime})
+        ON DUPLICATE KEY UPDATE
+        user_name = VALUES(user_name),
+        user_account = VALUES(user_account),
+        status = VALUES(status),
+        update_time = VALUES(update_time)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="groupId != null">AND group_id = #{groupId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                AND user_account LIKE CONCAT('%', #{userAccount}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.groupId != null">AND group_id = #{condition.groupId}</if>
+            <if test="condition.userId != null">AND user_id = #{condition.userId}</if>
+            <if test="condition.userName != null and condition.userName != ''">
+                AND user_name LIKE CONCAT('%', #{condition.userName}, '%')
+            </if>
+            <if test="condition.userAccount != null and condition.userAccount != ''">
+                AND user_account LIKE CONCAT('%', #{condition.userAccount}, '%')
+            </if>
+            <if test="condition.status != null and condition.status != ''">
+                AND status = #{condition.status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_user_group_member
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="groupId != null">AND group_id = #{groupId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                AND user_account LIKE CONCAT('%', #{userAccount}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_group_member (group_id, user_id, user_name, user_account, status, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.groupId}, #{item.userId}, #{item.userName}, #{item.userAccount}, #{item.status}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_user_group_member WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtUserGroupMember">
+        UPDATE et_user_group_member
+        <set>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <insert id="insertUserGroupMember" parameterType="com.example.wmsiescore.model.EtUserGroupMember" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_group_member (group_id, user_id, user_name, user_account, status, create_time)
+        VALUES (#{groupId}, #{userId}, #{userName}, #{userAccount}, #{status}, #{createTime})
+    </insert>
+
+    <update id="updateUserGroupMember" parameterType="com.example.wmsiescore.model.EtUserGroupMember">
+        UPDATE et_user_group_member 
+        SET user_name = #{userName}, 
+            user_account = #{userAccount}, 
+            status = #{status}, 
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUserGroupMember">
+        DELETE FROM et_user_group_member WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteUserGroupMemberByUserId">
+        DELETE FROM et_user_group_member 
+        WHERE group_id = #{groupId} AND user_id = #{userId}
+    </delete>
+
+    <select id="getUserGroupMember" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE group_id = #{groupId} AND user_id = #{userId}
+    </select>
+
+    <select id="listMembersByGroupId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE group_id = #{groupId} AND status = 'active'
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listGroupsByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_group_member 
+        WHERE user_id = #{userId} AND status = 'active'
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateUserGroupMemberStatus">
+        UPDATE et_user_group_member 
+        SET status = #{status} 
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,6 +1,6 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.dao.EtExamPaperDao;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
 import com.example.wmsiescore.dto.ExamPaperQueryDTO;
 import com.example.wmsiescore.dto.ExamPaperSaveDTO;
 import com.example.wmsiescore.dto.PageResult;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AdminExamPaperServiceImpl implements AdminExamPaperService {
     
     @Autowired
-    private EtExamPaperDao etExamPaperDao;
+    private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
     
     @Override
     public PageResult getExamPaperList(ExamPaperQueryDTO queryDTO) {

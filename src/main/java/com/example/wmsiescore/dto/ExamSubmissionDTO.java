@@ -1,7 +1,6 @@
 package com.example.wmsiescore.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import java.util.List;
 
@@ -10,19 +9,19 @@ import java.util.List;
  * 用于接收用户提交的完整考试答案数据
  */
 @Data
-@ApiModel(value = "ExamSubmissionDTO", description = "考试提交请求对象")
+@Schema(description = "考试提交请求对象")
 public class ExamSubmissionDTO {
     
-    @ApiModelProperty(value = "考试记录ID", example = "1")
+    @Schema(description = "考试记录ID", example = "1")
     private Long examHistoryId;
     
-    @ApiModelProperty(value = "用户ID", example = "1001")
+    @Schema(description = "用户ID", example = "1001")
     private Long userId;
     
-    @ApiModelProperty(value = "试卷ID", example = "1")
+    @Schema(description = "试卷ID", example = "1")
     private Long examPaperId;
     
-    @ApiModelProperty(value = "答案列表")
+    @Schema(description = "答案列表")
     private List<QuestionAnswerDTO> answers;
     
     /**

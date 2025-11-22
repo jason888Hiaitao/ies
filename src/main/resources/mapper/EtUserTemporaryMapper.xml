@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtUserTemporaryMapper">
+    <resultMap id="etUserTemporaryResultMap" type="com.example.wmsiescore.model.EtUserTemporary">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+        <result property="addDate" column="add_date" />
+        <result property="expireDate" column="expire_date" />
+        <result property="addBy" column="add_by" />
+        <result property="enabled" column="enabled" />
+        <result property="ifOutSource" column="if_out_source" />
+        <result property="truename" column="truename" />
+        <result property="fieldId" column="field_id" />
+        <result property="province" column="province" />
+        <result property="company" column="company" />
+        <result property="department" column="department" />
+        <result property="groupname" column="groupname" />
+        <result property="temporaryDepartment" column="temporary_department" />
+        <result property="temporaryGroupname" column="temporary_groupname" />
+    </resultMap>
+
+    <select id="findAll" resultMap="etUserTemporaryResultMap">
+        SELECT * FROM et_user_temporary
+    </select>
+
+    <select id="findById" resultMap="etUserTemporaryResultMap">
+        SELECT * FROM et_user_temporary WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtUserTemporary" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_temporary (username, password, email, phone, add_date, expire_date, add_by, enabled, if_out_source, truename, field_id, province, company, department, groupname, temporary_department, temporary_groupname)
+        VALUES (#{username}, #{password}, #{email}, #{phone}, #{addDate}, #{expireDate}, #{addBy}, #{enabled}, #{ifOutSource}, #{truename}, #{fieldId}, #{province}, #{company}, #{department}, #{groupname}, #{temporaryDepartment}, #{temporaryGroupname})
+    </insert>
+
+    <update id="update" parameterType="com.example.wmsiescore.model.EtUserTemporary">
+        UPDATE et_user_temporary
+        SET username = #{username}, password = #{password}, email = #{email}, phone = #{phone}, add_date = #{addDate}, expire_date = #{expireDate}, add_by = #{addBy}, enabled = #{enabled}, if_out_source = #{ifOutSource}, truename = #{truename}, field_id = #{fieldId}, province = #{province}, company = #{company}, department = #{department}, groupname = #{groupname}, temporary_department = #{temporaryDepartment}, temporary_groupname = #{temporaryGroupname}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM et_user_temporary WHERE id = #{id}
+    </delete>
+</mapper>

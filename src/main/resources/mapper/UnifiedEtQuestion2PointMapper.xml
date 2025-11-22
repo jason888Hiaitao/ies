@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.EtQuestion2PointDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtQuestion2Point">
+        <id column="question_2_point_id" property="question2PointId" jdbcType="INTEGER"/>
+        <result column="question_id" property="questionId" jdbcType="INTEGER"/>
+        <result column="point_id" property="pointId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        question_2_point_id, question_id, point_id
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtQuestion2Point" useGeneratedKeys="true" keyProperty="question2PointId">
+        INSERT INTO et_question_2_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">question_id,</if>
+            <if test="pointId != null">point_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">#{questionId},</if>
+            <if test="pointId != null">#{pointId},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtQuestion2Point">
+        INSERT INTO et_question_2_point (question_id, point_id)
+        VALUES (#{questionId}, #{pointId})
+        ON DUPLICATE KEY UPDATE
+        question_id = VALUES(question_id),
+        point_id = VALUES(point_id)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        <where>
+            <if test="question2PointId != null">question_2_point_id = #{question2PointId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+        </where>
+        ORDER BY question_2_point_id
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        <where>
+            <if test="condition.question2PointId != null">question_2_point_id = #{condition.question2PointId}</if>
+            <if test="condition.questionId != null">AND question_id = #{condition.questionId}</if>
+            <if test="condition.pointId != null">AND point_id = #{condition.pointId}</if>
+        </where>
+        ORDER BY question_2_point_id
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_question_2_point
+        <where>
+            <if test="question2PointId != null">question_2_point_id = #{question2PointId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="pointId != null">AND point_id = #{pointId}</if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_question_2_point (question_id, point_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.questionId}, #{item.pointId})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_question_2_point WHERE question_2_point_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtQuestion2Point">
+        UPDATE et_question_2_point
+        <set>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="pointId != null">point_id = #{pointId},</if>
+        </set>
+        WHERE question_2_point_id = #{question2PointId}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtQuestion2Point" useGeneratedKeys="true" keyProperty="question2PointId">
+        INSERT INTO et_question_2_point (question_id, point_id)
+        VALUES (#{questionId}, #{pointId})
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM et_question_2_point WHERE question_2_point_id = #{question2PointId}
+    </delete>
+
+    <delete id="deleteByQuestionId" parameterType="java.lang.Integer">
+        DELETE FROM et_question_2_point WHERE question_id = #{questionId}
+    </delete>
+
+    <delete id="deleteByPointId" parameterType="java.lang.Integer">
+        DELETE FROM et_question_2_point WHERE point_id = #{pointId}
+    </delete>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtQuestion2Point">
+        UPDATE et_question_2_point
+        SET question_id = #{questionId},
+            point_id = #{pointId}
+        WHERE question_2_point_id = #{question2PointId}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_2_point_id = #{question2PointId}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        ORDER BY question_2_point_id
+    </select>
+
+    <select id="selectByQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_id = #{questionId}
+        ORDER BY question_2_point_id
+    </select>
+
+    <select id="selectByPointId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE point_id = #{pointId}
+        ORDER BY question_2_point_id
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        DELETE FROM et_question_2_point WHERE question_2_point_id IN
+        <foreach collection="question2PointIds" item="question2PointId" open="(" separator="," close=")">
+            #{question2PointId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByQuestionIds" parameterType="java.util.List">
+        DELETE FROM et_question_2_point WHERE question_id IN
+        <foreach collection="questionIds" item="questionId" open="(" separator="," close=")">
+            #{questionId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByPointIds" parameterType="java.util.List">
+        DELETE FROM et_question_2_point WHERE point_id IN
+        <foreach collection="pointIds" item="pointId" open="(" separator="," close=")">
+            #{pointId}
+        </foreach>
+    </delete>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM et_question_2_point
+    </select>
+
+    <select id="countByQuestionId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM et_question_2_point WHERE question_id = #{questionId}
+    </select>
+
+    <select id="countByPointId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM et_question_2_point WHERE point_id = #{pointId}
+    </select>
+
+    <select id="selectByQuestionIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question_2_point
+        WHERE question_id IN
+        <foreach collection="questionIds" item="questionId" open="(" separator="," close=")">
+            #{questionId}
+        </foreach>
+        ORDER BY question_2_point_id
+    </select>
+</mapper>

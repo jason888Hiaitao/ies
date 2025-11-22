@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtQuestionDao">
+    <!-- 结果映射 -->
+    <resultMap id="EtQuestionResultMap" type="com.example.wmsiescore.model.EtQuestion">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="question_type_id" property="questionTypeId" jdbcType="BIGINT"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="points" property="points" jdbcType="DECIMAL"/>
+        <result column="group_id" property="groupId" jdbcType="BIGINT"/>
+        <result column="is_visible" property="isVisible" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="last_modify" property="lastModify" jdbcType="TIMESTAMP"/>
+        <result column="expose_times" property="exposeTimes" jdbcType="INTEGER"/>
+        <result column="right_times" property="rightTimes" jdbcType="INTEGER"/>
+        <result column="wrong_times" property="wrongTimes" jdbcType="INTEGER"/>
+        <result column="difficulty" property="difficulty" jdbcType="VARCHAR"/>
+        <result column="analysis" property="analysis" jdbcType="LONGVARCHAR"/>
+        <result column="reference" property="reference" jdbcType="LONGVARCHAR"/>
+        <result column="examining_point" property="examiningPoint" jdbcType="LONGVARCHAR"/>
+        <result column="keyword" property="keyword" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, name, content, question_type_id, duration, points, group_id, is_visible, 
+        create_time, creator, last_modify, expose_times, right_times, wrong_times, 
+        difficulty, analysis, reference, examining_point, keyword
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="content != null">content,</if>
+            <if test="questionTypeId != null">question_type_id,</if>
+            <if test="duration != null">duration,</if>
+            <if test="points != null">points,</if>
+            <if test="groupId != null">group_id,</if>
+            <if test="isVisible != null">is_visible,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="creator != null">creator,</if>
+            <if test="lastModify != null">last_modify,</if>
+            <if test="exposeTimes != null">expose_times,</if>
+            <if test="rightTimes != null">right_times,</if>
+            <if test="wrongTimes != null">wrong_times,</if>
+            <if test="difficulty != null">difficulty,</if>
+            <if test="analysis != null">analysis,</if>
+            <if test="reference != null">reference,</if>
+            <if test="examiningPoint != null">examining_point,</if>
+            <if test="keyword != null">keyword,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="content != null">#{content},</if>
+            <if test="questionTypeId != null">#{questionTypeId},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="points != null">#{points},</if>
+            <if test="groupId != null">#{groupId},</if>
+            <if test="isVisible != null">#{isVisible},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="lastModify != null">#{lastModify},</if>
+            <if test="exposeTimes != null">#{exposeTimes},</if>
+            <if test="rightTimes != null">#{rightTimes},</if>
+            <if test="wrongTimes != null">#{wrongTimes},</if>
+            <if test="difficulty != null">#{difficulty},</if>
+            <if test="analysis != null">#{analysis},</if>
+            <if test="reference != null">#{reference},</if>
+            <if test="examiningPoint != null">#{examiningPoint},</if>
+            <if test="keyword != null">#{keyword},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtQuestion">
+        INSERT INTO et_question (name, content, question_type_id, duration, points, group_id, is_visible, 
+        create_time, creator, last_modify, expose_times, right_times, wrong_times, 
+        difficulty, analysis, reference, examining_point, keyword)
+        VALUES (#{name}, #{content}, #{questionTypeId}, #{duration}, #{points}, #{groupId}, #{isVisible}, 
+        #{createTime}, #{creator}, #{lastModify}, #{exposeTimes}, #{rightTimes}, #{wrongTimes}, 
+        #{difficulty}, #{analysis}, #{reference}, #{examiningPoint}, #{keyword})
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        content = VALUES(content),
+        question_type_id = VALUES(question_type_id),
+        duration = VALUES(duration),
+        points = VALUES(points),
+        group_id = VALUES(group_id),
+        is_visible = VALUES(is_visible),
+        creator = VALUES(creator),
+        last_modify = VALUES(last_modify),
+        expose_times = VALUES(expose_times),
+        right_times = VALUES(right_times),
+        wrong_times = VALUES(wrong_times),
+        difficulty = VALUES(difficulty),
+        analysis = VALUES(analysis),
+        reference = VALUES(reference),
+        examining_point = VALUES(examining_point),
+        keyword = VALUES(keyword)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="questionTypeId != null">
+                AND question_type_id = #{questionTypeId}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND creator = #{creator}
+            </if>
+            <if test="difficulty != null and difficulty != ''">
+                AND difficulty = #{difficulty}
+            </if>
+            <if test="exposeTimes != null">
+                AND expose_times = #{exposeTimes}
+            </if>
+            <if test="rightTimes != null">
+                AND right_times = #{rightTimes}
+            </if>
+            <if test="wrongTimes != null">
+                AND wrong_times = #{wrongTimes}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        <where>
+            <if test="condition.id != null">id = #{condition.id}</if>
+            <if test="condition.name != null and condition.name != ''">
+                AND name LIKE CONCAT('%', #{condition.name}, '%')
+            </if>
+            <if test="condition.questionTypeId != null">
+                AND question_type_id = #{condition.questionTypeId}
+            </if>
+            <if test="condition.groupId != null">
+                AND group_id = #{condition.groupId}
+            </if>
+            <if test="condition.isVisible != null">
+                AND is_visible = #{condition.isVisible}
+            </if>
+            <if test="condition.creator != null and condition.creator != ''">
+                AND creator = #{condition.creator}
+            </if>
+            <if test="condition.difficulty != null and condition.difficulty != ''">
+                AND difficulty = #{condition.difficulty}
+            </if>
+            <if test="condition.exposeTimes != null">
+                AND expose_times = #{condition.exposeTimes}
+            </if>
+            <if test="condition.rightTimes != null">
+                AND right_times = #{condition.rightTimes}
+            </if>
+            <if test="condition.wrongTimes != null">
+                AND wrong_times = #{condition.wrongTimes}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_question
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="questionTypeId != null">
+                AND question_type_id = #{questionTypeId}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND creator = #{creator}
+            </if>
+            <if test="difficulty != null and difficulty != ''">
+                AND difficulty = #{difficulty}
+            </if>
+            <if test="exposeTimes != null">
+                AND expose_times = #{exposeTimes}
+            </if>
+            <if test="rightTimes != null">
+                AND right_times = #{rightTimes}
+            </if>
+            <if test="wrongTimes != null">
+                AND wrong_times = #{wrongTimes}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_question (name, content, question_type_id, duration, points, group_id, is_visible, 
+        create_time, creator, last_modify, expose_times, right_times, wrong_times, 
+        difficulty, analysis, reference, examining_point, keyword)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name}, #{item.content}, #{item.questionTypeId}, #{item.duration}, #{item.points}, 
+             #{item.groupId}, #{item.isVisible}, #{item.createTime}, #{item.creator}, 
+             #{item.lastModify}, #{item.exposeTimes}, #{item.rightTimes}, #{item.wrongTimes}, 
+             #{item.difficulty}, #{item.analysis}, #{item.reference}, #{item.examiningPoint}, #{item.keyword})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_question WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtQuestion">
+        UPDATE et_question
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="questionTypeId != null">question_type_id = #{questionTypeId},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="points != null">points = #{points},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="lastModify != null">last_modify = #{lastModify},</if>
+            <if test="exposeTimes != null">expose_times = #{exposeTimes},</if>
+            <if test="rightTimes != null">right_times = #{rightTimes},</if>
+            <if test="wrongTimes != null">wrong_times = #{wrongTimes},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
+            <if test="analysis != null">analysis = #{analysis},</if>
+            <if test="reference != null">reference = #{reference},</if>
+            <if test="examiningPoint != null">examining_point = #{examiningPoint},</if>
+            <if test="keyword != null">keyword = #{keyword},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_question (
+            name, content, question_type_id, duration, points, group_id, is_visible, 
+            create_time, creator, last_modify, expose_times, right_times, wrong_times, 
+            difficulty, analysis, reference, examining_point, keyword
+        ) VALUES (
+            #{name}, #{content}, #{questionTypeId}, #{duration}, #{points}, #{groupId}, #{isVisible}, 
+            #{createTime}, #{creator}, #{lastModify}, #{exposeTimes}, #{rightTimes}, #{wrongTimes}, 
+            #{difficulty}, #{analysis}, #{reference}, #{examiningPoint}, #{keyword}
+        )
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM et_question WHERE id = #{id}
+    </delete>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtQuestion">
+        UPDATE et_question 
+        SET name = #{name},
+            content = #{content},
+            question_type_id = #{questionTypeId},
+            duration = #{duration},
+            points = #{points},
+            group_id = #{groupId},
+            is_visible = #{isVisible},
+            creator = #{creator},
+            last_modify = #{lastModify},
+            expose_times = #{exposeTimes},
+            right_times = #{rightTimes},
+            wrong_times = #{wrongTimes},
+            difficulty = #{difficulty},
+            analysis = #{analysis},
+            reference = #{reference},
+            examining_point = #{examiningPoint},
+            keyword = #{keyword}
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByNameLike" parameterType="java.lang.String" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE name LIKE CONCAT('%', #{name}, '%')
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByTypeId" parameterType="java.lang.Long" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE question_type_id = #{questionTypeId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE group_id = #{groupId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByIsVisible" parameterType="java.lang.Boolean" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE is_visible = #{isVisible}
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByCreator" parameterType="java.lang.String" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE creator = #{creator}
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByDifficulty" parameterType="java.lang.String" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE difficulty = #{difficulty}
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectByCondition" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="questionTypeId != null">
+                AND question_type_id = #{questionTypeId}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND creator = #{creator}
+            </if>
+            <if test="difficulty != null and difficulty != ''">
+                AND difficulty = #{difficulty}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_question
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="questionTypeId != null">
+                AND question_type_id = #{questionTypeId}
+            </if>
+            <if test="groupId != null">
+                AND group_id = #{groupId}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="creator != null and creator != ''">
+                AND creator = #{creator}
+            </if>
+            <if test="difficulty != null and difficulty != ''">
+                AND difficulty = #{difficulty}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds" parameterType="java.util.List">
+        DELETE FROM et_question WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM et_question
+    </select>
+
+    <select id="selectByIds" parameterType="java.util.List" resultMap="EtQuestionResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_question
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 多表关联查询试题列表（包含知识点和题库信息） -->
+    <resultMap id="QuestionListDTOResultMap" type="com.example.wmsiescore.dto.QuestionListDTO">
+        <result column="question_id" property="questionId" jdbcType="BIGINT"/>
+        <result column="question_name" property="questionName" jdbcType="VARCHAR"/>
+        <result column="question_type_id" property="questionTypeId" jdbcType="BIGINT"/>
+        <result column="point_id" property="pointId" jdbcType="BIGINT"/>
+        <result column="point_name" property="pointName" jdbcType="VARCHAR"/>
+        <result column="field_id" property="fieldId" jdbcType="BIGINT"/>
+        <result column="field_name" property="fieldName" jdbcType="VARCHAR"/>
+        <result column="difficulty" property="difficulty" jdbcType="VARCHAR"/>
+        <result column="points" property="points" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <select id="selectQuestionListWithDetails" resultMap="QuestionListDTOResultMap">
+        SELECT DISTINCT
+            q.id as question_id,
+            q.name as question_name,
+            q.question_type_id as question_type_id,
+            q.difficulty,
+            q.points,
+            kp.point_id as point_id,
+            kp.point_name as point_name,
+            f.field_id as field_id,
+            f.field_name as field_name
+        FROM et_question q
+        LEFT JOIN et_question_2_point qp ON q.id = qp.question_id
+        LEFT JOIN et_knowledge_point kp ON qp.point_id = kp.point_id
+        LEFT JOIN et_field f ON kp.field_id = f.field_id
+        <where>
+            <if test="questionName != null and questionName != ''">
+                AND q.name LIKE CONCAT('%', #{questionName}, '%')
+            </if>
+            <if test="questionTypeId != null">
+                AND q.question_type_id = #{questionTypeId}
+            </if>
+            <if test="pointId != null">
+                AND kp.point_id = #{pointId}
+            </if>
+            <if test="fieldId != null">
+                AND f.field_id = #{fieldId}
+            </if>
+        </where>
+        ORDER BY q.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 多表关联统计试题数量 -->
+    <select id="countQuestionListWithDetails" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT q.id)
+        FROM et_question q
+        LEFT JOIN et_question_2_point qp ON q.id = qp.question_id
+        LEFT JOIN et_knowledge_point kp ON qp.point_id = kp.point_id
+        LEFT JOIN et_field f ON kp.field_id = f.field_id
+        <where>
+            <if test="questionName != null and questionName != ''">
+                AND q.name LIKE CONCAT('%', #{questionName}, '%')
+            </if>
+            <if test="questionTypeId != null">
+                AND q.question_type_id = #{questionTypeId}
+            </if>
+            <if test="pointId != null">
+                AND kp.point_id = #{pointId}
+            </if>
+            <if test="fieldId != null">
+                AND f.field_id = #{fieldId}
+            </if>
+        </where>
+    </select>
+</mapper>

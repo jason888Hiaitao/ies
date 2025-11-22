@@ -1,7 +1,6 @@
 package com.example.wmsiescore.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,13 +8,13 @@ import lombok.Data;
  * 用于接收用户提交的答案数据
  */
 @Data
-@ApiModel(value = "QuestionAnswerDTO", description = "问题答案对象")
+@Schema(description = "问题答案对象")
 public class QuestionAnswerDTO {
     
-    @ApiModelProperty(value = "问题ID", example = "1")
+    @Schema(description = "问题ID", example = "1")
     private Long questionId;
     
-    @ApiModelProperty(value = "用户答案", example = "A")
+    @Schema(description = "用户答案", example = "A")
     private String answer;
     
     /**

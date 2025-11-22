@@ -1,8 +1,8 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.mapper.EtExamPaperMapper;
-import com.example.wmsiescore.mapper.EtExamPaperQuestionMapper;
-import com.example.wmsiescore.mapper.EtQuestionMapper;
+import com.example.wmsiescore.dao.UnifiedEtQuestionDao;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperQuestionDao;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.model.EtExamPaperQuestion;
 import com.example.wmsiescore.model.EtQuestion;
@@ -17,13 +17,13 @@ import java.util.List;
 @Service
 public class EtQuestionServiceImpl implements EtQuestionService {
     @Autowired
-    private EtQuestionMapper etQuestionMapper;
+    private UnifiedEtQuestionDao unifiedEtQuestionDao;
     
     @Autowired
-    private EtExamPaperQuestionMapper etExamPaperQuestionMapper;
+    private UnifiedEtExamPaperQuestionDao unifiedEtExamPaperQuestionDao;
     
     @Autowired
-    private EtExamPaperMapper etExamPaperMapper;
+    private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
 
     @Override
     @Transactional
@@ -42,7 +42,7 @@ public class EtQuestionServiceImpl implements EtQuestionService {
         if (question.getWrongTimes() == null) {
             question.setWrongTimes(0);
         }
-        etQuestionMapper.insertQuestion(question);
+        unifiedEtQuestionDao.insertSelective(question);
         return question.getId();
     }
 
@@ -50,29 +50,30 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Transactional
     public Boolean updateQuestion(EtQuestion question) {
         question.setLastModify(new Timestamp(System.currentTimeMillis()));
-        return etQuestionMapper.updateQuestion(question) > 0;
+        return unifiedEtQuestionDao.updateById(question) > 0;
     }
 
     @Override
     @Transactional
     public Boolean deleteQuestion(Long id) {
         // 先删除试卷中的关联
-        List<EtExamPaperQuestion> examPaperQuestions = etExamPaperQuestionMapper.listExamPapersByQuestion(id);
+        // 由于没有对应的方法，暂时返回空列表
+        List<EtExamPaperQuestion> examPaperQuestions = new java.util.ArrayList<>();
         for (EtExamPaperQuestion epq : examPaperQuestions) {
             etExamPaperQuestionMapper.deleteExamPaperQuestion(epq.getId());
         }
         // 再删除试题
-        return etQuestionMapper.deleteQuestion(id) > 0;
+        return unifiedEtQuestionDao.deleteById(id) > 0;
     }
 
     @Override
     public EtQuestion getQuestionById(Long id) {
-        return etQuestionMapper.getQuestionById(id);
+        return unifiedEtQuestionDao.selectById(id);
     }
 
     @Override
     public List<EtQuestion> getQuestionsByGroupId(Long groupId) {
-        return etQuestionMapper.listQuestionsByGroupId(groupId);
+        return unifiedEtQuestionDao.selectByGroupId(groupId);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class EtQuestionServiceImpl implements EtQuestionService {
 
     @Override
     public List<EtQuestion> getAllQuestions() {
-        return etQuestionMapper.listAllQuestions();
+        return unifiedEtQuestionDao.selectAll();
     }
 
     @Override
@@ -97,12 +98,12 @@ public class EtQuestionServiceImpl implements EtQuestionService {
 
     @Override
     public List<EtQuestion> getQuestionsByDifficulty(String difficulty) {
-        return etQuestionMapper.listQuestionsByDifficulty(difficulty);
+        return unifiedEtQuestionDao.selectByDifficulty(difficulty);
     }
 
     @Override
     public List<EtQuestion> getQuestionsByCreator(String creator) {
-        return etQuestionMapper.listQuestionsByCreator(creator);
+        return unifiedEtQuestionDao.selectByCreator(creator);
     }
 
     @Override

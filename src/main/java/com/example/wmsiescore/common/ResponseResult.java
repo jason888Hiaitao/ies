@@ -67,6 +67,63 @@ public class ResponseResult<T> {
     /**
      * 失败响应
      */
+    public static <T> ResponseResult<T> fail() {
+        return new ResponseResult<>(500, "操作失败");
+    }
+    
+    /**
+     * 失败响应（带错误信息）
+     */
+    public static <T> ResponseResult<T> fail(String message) {
+        // 参数验证
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException("错误信息不能为空");
+        }
+        return new ResponseResult<>(500, message);
+    }
+    
+    /**
+     * 失败响应（自定义状态码和错误信息）
+     */
+    public static <T> ResponseResult<T> fail(Integer code, String message) {
+        // 参数验证
+        if (code == null) {
+            throw new IllegalArgumentException("状态码不能为空");
+        }
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException("错误信息不能为空");
+        }
+        return new ResponseResult<>(code, message);
+    }
+    
+    /**
+     * 失败响应（带数据）
+     */
+    public static <T> ResponseResult<T> fail(String message, T data) {
+        // 参数验证
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException("错误信息不能为空");
+        }
+        return new ResponseResult<>(500, message, data);
+    }
+    
+    /**
+     * 失败响应（自定义状态码、错误信息和数据）
+     */
+    public static <T> ResponseResult<T> fail(Integer code, String message, T data) {
+        // 参数验证
+        if (code == null) {
+            throw new IllegalArgumentException("状态码不能为空");
+        }
+        if (message == null || message.trim().isEmpty()) {
+            throw new IllegalArgumentException("错误信息不能为空");
+        }
+        return new ResponseResult<>(code, message, data);
+    }
+    
+    /**
+     * 失败响应（已废弃的错误方法）
+     */
     public static <T> ResponseResult<T> error() {
         return new ResponseResult<>(500, "操作失败");
     }

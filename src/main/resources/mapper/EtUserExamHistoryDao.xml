@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtUserExamHistoryDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="ExamHistoryDetailResult" type="com.example.wmsiescore.dto.ExamHistoryDetailDTO">
+        <id column="histId" property="histId" />
+        <result column="user_id" property="userId" />
+        <result column="username" property="username" />
+        <result column="truename" property="truename" />
+        <result column="department" property="department" />
+        <result column="groupname" property="groupname" />
+        <result column="exam_paper_id" property="examPaperId" />
+        <result column="exam_paper_name" property="examPaperName" />
+        <result column="content" property="content" />
+        <result column="answer_sheet" property="answerSheet" />
+        <result column="duration" property="duration" />
+        <result column="submit_time" property="submitTime" />
+        <result column="point_get" property="pointGet" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 分页查询考试历史列表（包含用户和试卷信息） -->
+    <select id="selectExamHistoryList" resultMap="ExamHistoryDetailResult">
+        SELECT 
+            h.histId,
+            h.user_id,
+            u.username,
+            u.truename,
+            u.department,
+            u.groupname,
+            h.exam_paper_id,
+            p.name AS exam_paper_name,
+            h.content,
+            h.answer_sheet,
+            h.duration,
+            h.submit_time,
+            h.point_get,
+            h.create_time
+        FROM et_user_exam_history h
+        LEFT JOIN et_user u ON h.user_id = u.id
+        LEFT JOIN et_exam_paper p ON h.exam_paper_id = p.id
+        <where>
+            <if test="examPaperName != null and examPaperName != ''">
+                AND p.name LIKE CONCAT('%', #{examPaperName}, '%')
+            </if>
+            <if test="department != null and department != ''">
+                AND u.department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND u.groupname = #{groupname}
+            </if>
+        </where>
+        ORDER BY h.create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 统计考试历史总数 -->
+    <select id="countExamHistoryList" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM et_user_exam_history h
+        LEFT JOIN et_user u ON h.user_id = u.id
+        LEFT JOIN et_exam_paper p ON h.exam_paper_id = p.id
+        <where>
+            <if test="examPaperName != null and examPaperName != ''">
+                AND p.name LIKE CONCAT('%', #{examPaperName}, '%')
+            </if>
+            <if test="department != null and department != ''">
+                AND u.department = #{department}
+            </if>
+            <if test="groupname != null and groupname != ''">
+                AND u.groupname = #{groupname}
+            </if>
+        </where>
+    </select>
+
+</mapper>

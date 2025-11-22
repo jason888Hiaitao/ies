@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtUserExamHistoryDao">
+    <resultMap id="etUserExamHistoryResultMap" type="com.example.wmsiescore.model.EtUserExamHistory">
+        <id property="histId" column="hist_id" />
+        <result property="userId" column="user_id" />
+        <result property="examPaperId" column="exam_paper_id" />
+        <result property="content" column="content" />
+        <result property="createTime" column="create_time" />
+        <result property="answerSheet" column="answer_sheet" />
+        <result property="duration" column="duration" />
+        <result property="submitTime" column="submit_time" />
+        <result property="pointGet" column="point_get" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        hist_id, user_id, exam_paper_id, content, create_time, answer_sheet, duration, submit_time, point_get
+    </sql>
+
+    <select id="selectAll" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM et_user_exam_history
+    </select>
+
+    <select id="selectById" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM et_user_exam_history WHERE hist_id = #{histId}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="histId">
+        INSERT INTO et_user_exam_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="examPaperId != null">exam_paper_id,</if>
+            <if test="content != null">content,</if>
+            <if test="answerSheet != null">answer_sheet,</if>
+            <if test="duration != null">duration,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="pointGet != null">point_get,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="examPaperId != null">#{examPaperId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="answerSheet != null">#{answerSheet},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="pointGet != null">#{pointGet},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="histId">
+        INSERT INTO et_user_exam_history (user_id, exam_paper_id, content, answer_sheet, duration, submit_time, point_get)
+        VALUES (#{userId}, #{examPaperId}, #{content}, #{answerSheet}, #{duration}, #{submitTime}, #{pointGet})
+        ON DUPLICATE KEY UPDATE
+        user_id = VALUES(user_id),
+        exam_paper_id = VALUES(exam_paper_id),
+        content = VALUES(content),
+        answer_sheet = VALUES(answer_sheet),
+        duration = VALUES(duration),
+        submit_time = VALUES(submit_time),
+        point_get = VALUES(point_get)
+    </insert>
+
+    <select id="selectByCondition" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_user_exam_history
+        <where>
+            <if test="histId != null">AND hist_id = #{histId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="duration != null">AND duration = #{duration}</if>
+            <if test="pointGet != null">AND point_get = #{pointGet}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_user_exam_history
+        <where>
+            <if test="histId != null">AND hist_id = #{histId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="duration != null">AND duration = #{duration}</if>
+            <if test="pointGet != null">AND point_get = #{pointGet}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_user_exam_history
+        <where>
+            <if test="histId != null">AND hist_id = #{histId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="duration != null">AND duration = #{duration}</if>
+            <if test="pointGet != null">AND point_get = #{pointGet}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_user_exam_history (user_id, exam_paper_id, content, answer_sheet, duration, submit_time, point_get)
+        VALUES
+        <foreach collection="userExamHistories" item="history" separator=",">
+            (#{history.userId}, #{history.examPaperId}, #{history.content}, #{history.answerSheet}, #{history.duration}, #{history.submitTime}, #{history.pointGet})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_user_exam_history WHERE hist_id IN
+        <foreach collection="histIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_user_exam_history
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="examPaperId != null">exam_paper_id = #{examPaperId},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="pointGet != null">point_get = #{pointGet},</if>
+        </set>
+        WHERE hist_id = #{histId}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        UPDATE et_user_exam_history
+        SET user_id = #{userId}, exam_paper_id = #{examPaperId}, content = #{content}, answer_sheet = #{answerSheet}, duration = #{duration}, submit_time = #{submitTime}, point_get = #{pointGet}
+        WHERE hist_id = #{histId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_user_exam_history WHERE hist_id = #{histId}
+    </delete>
+
+    <select id="selectByUserId" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_user_exam_history
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByExamPaperId" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_user_exam_history
+        WHERE exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="selectByUserIdAndExamPaperId" resultMap="etUserExamHistoryResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_user_exam_history
+        WHERE user_id = #{userId} AND exam_paper_id = #{examPaperId}
+    </select>
+</mapper>

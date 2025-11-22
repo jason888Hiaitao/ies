@@ -1,7 +1,7 @@
 package com.example.wmsiescore.service.impl;
 
 import com.example.wmsiescore.dto.KnowledgePointSaveDTO;
-import com.example.wmsiescore.mapper.EtKnowledgePointMapper;
+import com.example.wmsiescore.dao.UnifiedEtKnowledgePointDao;
 import com.example.wmsiescore.model.EtKnowledgePoint;
 import com.example.wmsiescore.service.AdminKnowledgePointService;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +19,7 @@ import java.util.List;
 public class AdminKnowledgePointServiceImpl implements AdminKnowledgePointService {
     
     @Autowired
-    private EtKnowledgePointMapper etKnowledgePointMapper;
+    private UnifiedEtKnowledgePointDao unifiedEtKnowledgePointDao;
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -55,7 +55,7 @@ public class AdminKnowledgePointServiceImpl implements AdminKnowledgePointServic
             knowledgePoint.setState(BigDecimal.ONE); // 默认状态为1（正常）
         }
         
-        int result = etKnowledgePointMapper.insert(knowledgePoint);
+        int result = unifiedEtKnowledgePointDao.insertSelective(knowledgePoint);
         return result > 0;
     }
     
@@ -70,7 +70,7 @@ public class AdminKnowledgePointServiceImpl implements AdminKnowledgePointServic
         EtKnowledgePoint knowledgePoint = new EtKnowledgePoint();
         BeanUtils.copyProperties(knowledgePointSaveDTO, knowledgePoint);
         
-        int result = etKnowledgePointMapper.updateById(knowledgePoint);
+        int result = unifiedEtKnowledgePointDao.updateById(knowledgePoint);
         return result > 0;
     }
     
@@ -82,7 +82,7 @@ public class AdminKnowledgePointServiceImpl implements AdminKnowledgePointServic
             throw new IllegalArgumentException("删除操作必须提供ID");
         }
         
-        int result = etKnowledgePointMapper.deleteById(pointId);
+        int result = unifiedEtKnowledgePointDao.deleteById(pointId);
         return result > 0;
     }
     
@@ -94,7 +94,7 @@ public class AdminKnowledgePointServiceImpl implements AdminKnowledgePointServic
             throw new IllegalArgumentException("批量删除操作必须提供ID列表");
         }
         
-        int result = etKnowledgePointMapper.deleteBatchIds(ids);
+        int result = unifiedEtKnowledgePointDao.batchDelete(ids);
         return result > 0;
     }
     
@@ -103,6 +103,6 @@ public class AdminKnowledgePointServiceImpl implements AdminKnowledgePointServic
 
     @Override
     public EtKnowledgePoint selectById(Integer pointId) {
-        return etKnowledgePointMapper.selectById(pointId);
+        return unifiedEtKnowledgePointDao.selectById(pointId);
     }
 }

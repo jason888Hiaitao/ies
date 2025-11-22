@@ -1,10 +1,10 @@
 package com.example.wmsiescore.service.impl;
 
 import com.example.wmsiescore.exception.BusinessException;
-import com.example.wmsiescore.mapper.EtExamPaperMapper;
-import com.example.wmsiescore.mapper.EtUserExamHistoryMapper;
-import com.example.wmsiescore.mapper.EtUserGroupMapper;
-import com.example.wmsiescore.mapper.UserMapper;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
+import com.example.wmsiescore.dao.UnifiedEtUserExamHistoryDao;
+import com.example.wmsiescore.dao.UnifiedUserDao;
+import com.example.wmsiescore.dao.UnifiedEtUserGroupDao;
 import com.example.wmsiescore.model.*;
 import com.example.wmsiescore.service.EtUserExamHistoryService;
 import com.example.wmsiescore.service.PendingExamService;
@@ -27,22 +27,22 @@ import java.util.stream.Collectors;
 public class PendingExamServiceImpl implements PendingExamService {
 
     @Autowired
-    private EtExamPaperMapper etExamPaperMapper;
+    private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
     @Autowired
-    private EtUserExamHistoryMapper etUserExamHistoryMapper;
+    private UnifiedEtUserExamHistoryDao unifiedEtUserExamHistoryDao;
     @Autowired
-    private UserMapper userMapper;
+    private UnifiedUserDao unifiedUserDao;
     @Autowired
-    private EtUserGroupMapper etUserGroupMapper;
+    private UnifiedEtUserGroupDao unifiedEtUserGroupDao;
 
     @Override
     public List<Long> getCompletedExamPaperIds(Long userId) {
-        return etExamPaperMapper.getCompletedExamPaperIds(userId);
+        return unifiedEtUserExamHistoryDao.getCompletedExamPaperIds(userId);
     }
 
     @Override
     public List<EtExamPaper> getVisibleExamPapersForUser(Long userId) {
-        return etExamPaperMapper.getVisibleExamPapersForUser(userId);
+        return unifiedEtExamPaperDao.getVisibleExamPapersForUser(userId);
     }
 
     /**
@@ -63,13 +63,13 @@ public class PendingExamServiceImpl implements PendingExamService {
         
         try {
             // 1. 查询用户信息并校验用户是否存在
-            EtUser user = userMapper.getUser(userId);
+            EtUser user = unifiedUserDao.getUser(userId);
             if (user == null) {
                 throw new BusinessException("用户不存在，用户ID: " + userId);
             }
             
             // 2. 查询用户已完成的试卷ID列表
-            List<Long> completedExamPaperIds = etExamPaperMapper.getCompletedExamPaperIds(userId);
+            List<Long> completedExamPaperIds = unifiedEtExamPaperDao.getCompletedExamPaperIds(userId);
             if (completedExamPaperIds == null) {
                 completedExamPaperIds = new ArrayList<>();
             }
@@ -78,7 +78,7 @@ public class PendingExamServiceImpl implements PendingExamService {
             List<EtExamPaper> examPapersByDepartment = new ArrayList<>();
             String department = user.getDepartment();
             if (department != null && !department.trim().isEmpty()) {
-                examPapersByDepartment = etExamPaperMapper.getExamPapersByUserAndDepartment(department);
+                examPapersByDepartment = unifiedEtExamPaperDao.getExamPapersByUserAndDepartment(department);
                 if (examPapersByDepartment == null) {
                     examPapersByDepartment = new ArrayList<>();
                 }
@@ -86,7 +86,7 @@ public class PendingExamServiceImpl implements PendingExamService {
             
             // 4. 查询用户关联的群组
             List<EtExamPaper> examPapersByGroups = new ArrayList<>();
-            List<EtUserGroup> userGroups = etUserGroupMapper.getUserGroupsByUsername(user.getUsername());
+            List<EtUserGroup> userGroups = unifiedEtUserGroupDao.getUserGroupsByUsername(user.getUsername());
             if (userGroups != null && !userGroups.isEmpty()) {
                 List<Long> fieldIds = userGroups.stream()
                         .map(EtUserGroup::getFieldId)
@@ -94,7 +94,7 @@ public class PendingExamServiceImpl implements PendingExamService {
                         .collect(Collectors.toList());
                 
                 if (!fieldIds.isEmpty()) {
-                    examPapersByGroups = etExamPaperMapper.getExamPapersByFieldIds(fieldIds);
+                    examPapersByGroups = unifiedEtExamPaperDao.getExamPapersByFieldIds(fieldIds);
                     if (examPapersByGroups == null) {
                         examPapersByGroups = new ArrayList<>();
                     }
@@ -166,7 +166,7 @@ public class PendingExamServiceImpl implements PendingExamService {
         try {
             log.info("开始查询用户考试历史记录，用户ID: {}", userId);
             
-            List<EtUserExamHistory> history = etUserExamHistoryMapper.getUserExamHistoryWithSubmitTime(userId);
+            List<EtUserExamHistory> history = unifiedEtUserExamHistoryDao.getUserExamHistoryWithSubmitTime(userId);
             if (history == null) {
                 history = new ArrayList<>();
             }

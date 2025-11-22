@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtCommentDao">
+    <resultMap id="etCommentResultMap" type="com.example.wmsiescore.model.EtComment">
+        <id property="commentId" column="comment_id" />
+        <result property="questionId" column="question_id" />
+        <result property="indexId" column="index_id" />
+        <result property="userId" column="user_id" />
+        <result property="contentMsg" column="content_msg" />
+        <result property="quoteId" column="quote_id" />
+        <result property="reId" column="re_id" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        comment_id, question_id, index_id, user_id, content_msg, quote_id, re_id
+    </sql>
+
+    <select id="selectAll" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM et_comment
+    </select>
+
+    <select id="selectById" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM et_comment WHERE comment_id = #{commentId}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtComment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO et_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">question_id,</if>
+            <if test="indexId != null">index_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="contentMsg != null">content_msg,</if>
+            <if test="quoteId != null">quote_id,</if>
+            <if test="reId != null">re_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">#{questionId},</if>
+            <if test="indexId != null">#{indexId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="contentMsg != null">#{contentMsg},</if>
+            <if test="quoteId != null">#{quoteId},</if>
+            <if test="reId != null">#{reId},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtComment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO et_comment (question_id, index_id, user_id, content_msg, quote_id, re_id)
+        VALUES (#{questionId}, #{indexId}, #{userId}, #{contentMsg}, #{quoteId}, #{reId})
+        ON DUPLICATE KEY UPDATE
+        question_id = VALUES(question_id),
+        index_id = VALUES(index_id),
+        user_id = VALUES(user_id),
+        content_msg = VALUES(content_msg),
+        quote_id = VALUES(quote_id),
+        re_id = VALUES(re_id)
+    </insert>
+
+    <select id="selectByCondition" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_comment
+        <where>
+            <if test="commentId != null">AND comment_id = #{commentId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="commentIndex != null">AND index_id = #{commentIndex}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="contentMsg != null and contentMsg != ''">AND content_msg = #{contentMsg}</if>
+            <if test="quoteId != null">AND quote_id = #{quoteId}</if>
+            <if test="reId != null">AND re_id = #{reId}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM et_comment
+        <where>
+            <if test="commentId != null">AND comment_id = #{commentId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="commentIndex != null">AND index_id = #{commentIndex}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="contentMsg != null and contentMsg != ''">AND content_msg = #{contentMsg}</if>
+            <if test="quoteId != null">AND quote_id = #{quoteId}</if>
+            <if test="reId != null">AND re_id = #{reId}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_comment
+        <where>
+            <if test="commentId != null">AND comment_id = #{commentId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="commentIndex != null">AND index_id = #{commentIndex}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="contentMsg != null and contentMsg != ''">AND content_msg = #{contentMsg}</if>
+            <if test="quoteId != null">AND quote_id = #{quoteId}</if>
+            <if test="reId != null">AND re_id = #{reId}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_comment (question_id, index_id, user_id, content_msg, quote_id, re_id)
+        VALUES
+        <foreach collection="comments" item="comment" separator=",">
+            (#{comment.questionId}, #{comment.indexId}, #{comment.userId}, #{comment.contentMsg}, #{comment.quoteId}, #{comment.reId})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_comment WHERE comment_id IN
+        <foreach collection="commentIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_comment
+        <set>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="commentIndex != null">index_id = #{commentIndex},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="contentMsg != null">content_msg = #{contentMsg},</if>
+            <if test="quoteId != null">quote_id = #{quoteId},</if>
+            <if test="reId != null">re_id = #{reId},</if>
+        </set>
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtComment">
+        UPDATE et_comment
+        SET question_id = #{questionId}, index_id = #{indexId}, user_id = #{userId}, content_msg = #{contentMsg}, quote_id = #{quoteId}, re_id = #{reId}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_comment WHERE comment_id = #{commentId}
+    </delete>
+</mapper>

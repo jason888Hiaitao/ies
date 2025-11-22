@@ -1,6 +1,6 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.mapper.EtCommentMapper;
+import com.example.wmsiescore.dao.UnifiedEtCommentDao;
 import com.example.wmsiescore.model.EtComment;
 import com.example.wmsiescore.service.EtCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,30 +12,30 @@ import java.util.List;
 public class EtCommentServiceImpl implements EtCommentService {
 
     @Autowired
-    private EtCommentMapper etCommentMapper;
+    private UnifiedEtCommentDao unifiedEtCommentDao;
 
     @Override
     public List<EtComment> findAll() {
-        return etCommentMapper.findAll();
+        return unifiedEtCommentDao.selectAll();
     }
 
     @Override
     public EtComment findById(Integer commentId) {
-        return etCommentMapper.findById(commentId);
+        return unifiedEtCommentDao.selectById(commentId.longValue());
     }
 
     @Override
     public int save(EtComment etComment) {
-        return etCommentMapper.insert(etComment);
+        return unifiedEtCommentDao.insertSelective(etComment);
     }
 
     @Override
     public int update(EtComment etComment) {
-        return etCommentMapper.update(etComment);
+        return unifiedEtCommentDao.updateById(etComment);
     }
 
     @Override
     public int delete(Integer commentId) {
-        return etCommentMapper.delete(commentId);
+        return unifiedEtCommentDao.deleteById(commentId.longValue());
     }
 }

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.dao.UnifiedEtExamPaperQuestionDao">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtExamPaperQuestion">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="exam_paper_id" property="examPaperId" jdbcType="BIGINT"/>
+        <result column="question_id" property="questionId" jdbcType="BIGINT"/>
+        <result column="question_order" property="questionOrder" jdbcType="INTEGER"/>
+        <result column="points" property="points" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, exam_paper_id, question_id, question_order, points
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_exam_paper_question
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_exam_paper_question WHERE id = #{id}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtExamPaperQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_exam_paper_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examPaperId != null">exam_paper_id,</if>
+            <if test="questionId != null">question_id,</if>
+            <if test="questionOrder != null">question_order,</if>
+            <if test="points != null">points,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="examPaperId != null">#{examPaperId},</if>
+            <if test="questionId != null">#{questionId},</if>
+            <if test="questionOrder != null">#{questionOrder},</if>
+            <if test="points != null">#{points},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtExamPaperQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_exam_paper_question (exam_paper_id, question_id, question_order, points)
+        VALUES (#{examPaperId}, #{questionId}, #{questionOrder}, #{points})
+        ON DUPLICATE KEY UPDATE
+        exam_paper_id = VALUES(exam_paper_id),
+        question_id = VALUES(question_id),
+        question_order = VALUES(question_order),
+        points = VALUES(points)
+    </insert>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper_question
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="questionOrder != null">AND question_order = #{questionOrder}</if>
+            <if test="points != null">AND points = #{points}</if>
+        </where>
+    </select>
+
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper_question
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="questionOrder != null">AND question_order = #{questionOrder}</if>
+            <if test="points != null">AND points = #{points}</if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countByCondition" resultType="int">
+        SELECT COUNT(*) FROM et_exam_paper_question
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="examPaperId != null">AND exam_paper_id = #{examPaperId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="questionOrder != null">AND question_order = #{questionOrder}</if>
+            <if test="points != null">AND points = #{points}</if>
+        </where>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_exam_paper_question (exam_paper_id, question_id, question_order, points)
+        VALUES
+        <foreach collection="examPaperQuestions" item="item" separator=",">
+            (#{item.examPaperId}, #{item.questionId}, #{item.questionOrder}, #{item.points})
+        </foreach>
+    </insert>
+
+    <delete id="batchDelete">
+        DELETE FROM et_exam_paper_question WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateByCondition">
+        UPDATE et_exam_paper_question
+        <set>
+            <if test="examPaperId != null">exam_paper_id = #{examPaperId},</if>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="questionOrder != null">question_order = #{questionOrder},</if>
+            <if test="points != null">points = #{points},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtExamPaperQuestion">
+        UPDATE et_exam_paper_question 
+        SET exam_paper_id = #{examPaperId}, 
+            question_id = #{questionId}, 
+            question_order = #{questionOrder}, 
+            points = #{points}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_exam_paper_question WHERE id = #{id}
+    </delete>
+
+    <select id="selectByExamPaperId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper_question 
+        WHERE exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="selectByQuestionId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper_question 
+        WHERE question_id = #{questionId}
+    </select>
+
+    <select id="selectByExamPaperIdAndQuestionId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper_question 
+        WHERE exam_paper_id = #{examPaperId} AND question_id = #{questionId}
+    </select>
+
+    <select id="selectByExamPaperIdOrderByQuestionOrder" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_exam_paper_question 
+        WHERE exam_paper_id = #{examPaperId}
+        ORDER BY question_order ASC
+    </select>
+
+    <delete id="deleteByExamPaperId">
+        DELETE FROM et_exam_paper_question WHERE exam_paper_id = #{examPaperId}
+    </delete>
+
+    <delete id="deleteByQuestionId">
+        DELETE FROM et_exam_paper_question WHERE question_id = #{questionId}
+    </delete>
+
+    <select id="countQuestionsByExamPaperId" resultType="int">
+        SELECT COUNT(*) FROM et_exam_paper_question WHERE exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="sumPointsByExamPaperId" resultType="java.lang.Double">
+        SELECT COALESCE(SUM(points), 0) FROM et_exam_paper_question WHERE exam_paper_id = #{examPaperId}
+    </select>
+</mapper>

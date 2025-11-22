@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtKnowledgePointMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtKnowledgePoint">
+        <id column="point_id" property="pointId" jdbcType="INTEGER"/>
+        <result column="point_name" property="pointName" jdbcType="VARCHAR"/>
+        <result column="field_id" property="fieldId" jdbcType="INTEGER"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <!-- 关联查询结果映射 -->
+    <resultMap id="WithFieldResultMap" type="com.example.wmsiescore.model.EtKnowledgePoint" extends="BaseResultMap">
+        <association property="field" javaType="com.example.wmsiescore.model.EtField">
+            <id column="field_id" property="fieldId" jdbcType="INTEGER"/>
+            <result column="field_name" property="fieldName" jdbcType="VARCHAR"/>
+            <result column="field_memo" property="memo" jdbcType="VARCHAR"/>
+            <result column="field_state" property="state" jdbcType="DECIMAL"/>
+        </association>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        point_id, point_name, field_id, memo, state
+    </sql>
+
+    <!-- 关联查询列 -->
+    <sql id="WithField_Column_List">
+        kp.point_id, kp.point_name, kp.field_id, kp.memo, kp.state,
+        f.field_id, f.field_name, f.memo as field_memo, f.state as field_state
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtKnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
+        INSERT INTO et_knowledge_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pointName != null">point_name,</if>
+            <if test="fieldId != null">field_id,</if>
+            <if test="memo != null">memo,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="pointName != null">#{pointName},</if>
+            <if test="fieldId != null">#{fieldId},</if>
+            <if test="memo != null">#{memo},</if>
+            <if test="state != null">#{state},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtKnowledgePoint">
+        INSERT INTO et_knowledge_point (point_name, field_id, memo, state)
+        VALUES (#{pointName}, #{fieldId}, #{memo}, #{state})
+        ON DUPLICATE KEY UPDATE
+        point_name = VALUES(point_name),
+        field_id = VALUES(field_id),
+        memo = VALUES(memo),
+        state = VALUES(state)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        <where>
+            <if test="pointId != null">point_id = #{pointId}</if>
+            <if test="pointName != null and pointName != ''">
+                AND point_name LIKE CONCAT('%', #{pointName}, '%')
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="memo != null and memo != ''">
+                AND memo LIKE CONCAT('%', #{memo}, '%')
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+        ORDER BY point_id ASC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        <where>
+            <if test="condition.pointId != null">point_id = #{condition.pointId}</if>
+            <if test="condition.pointName != null and condition.pointName != ''">
+                AND point_name LIKE CONCAT('%', #{condition.pointName}, '%')
+            </if>
+            <if test="condition.fieldId != null">
+                AND field_id = #{condition.fieldId}
+            </if>
+            <if test="condition.memo != null and condition.memo != ''">
+                AND memo LIKE CONCAT('%', #{condition.memo}, '%')
+            </if>
+            <if test="condition.state != null">
+                AND state = #{condition.state}
+            </if>
+        </where>
+        ORDER BY point_id ASC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_knowledge_point
+        <where>
+            <if test="pointId != null">point_id = #{pointId}</if>
+            <if test="pointName != null and pointName != ''">
+                AND point_name LIKE CONCAT('%', #{pointName}, '%')
+            </if>
+            <if test="fieldId != null">
+                AND field_id = #{fieldId}
+            </if>
+            <if test="memo != null and memo != ''">
+                AND memo LIKE CONCAT('%', #{memo}, '%')
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_knowledge_point (point_name, field_id, memo, state)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.pointName}, #{item.fieldId}, #{item.memo}, #{item.state})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_knowledge_point WHERE point_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtKnowledgePoint">
+        UPDATE et_knowledge_point
+        <set>
+            <if test="pointName != null">point_name = #{pointName},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        WHERE point_id = #{pointId}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        <where>
+            <if test="knowledgePoint.pointName != null and knowledgePoint.pointName != ''">
+                AND point_name LIKE CONCAT('%', #{knowledgePoint.pointName}, '%')
+            </if>
+            <if test="knowledgePoint.fieldId != null">
+                AND field_id = #{knowledgePoint.fieldId}
+            </if>
+            <if test="knowledgePoint.state != null">
+                AND state = #{knowledgePoint.state}
+            </if>
+        </where>
+        ORDER BY point_id ASC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        WHERE point_id = #{pointId}
+    </select>
+
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtKnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
+        INSERT INTO et_knowledge_point (
+            point_name, field_id, memo, state
+        ) VALUES (
+            #{pointName}, #{fieldId}, #{memo}, #{state}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.example.wmsiescore.model.EtKnowledgePoint">
+        UPDATE et_knowledge_point
+        <set>
+            <if test="pointName != null">point_name = #{pointName},</if>
+            <if test="fieldId != null">field_id = #{fieldId},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        WHERE point_id = #{pointId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM et_knowledge_point WHERE point_id = #{pointId}
+    </delete>
+
+    <delete id="deleteBatchIds">
+        DELETE FROM et_knowledge_point WHERE point_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM et_knowledge_point
+        where state = 1
+        ORDER BY point_id ASC
+    </select>
+</mapper>

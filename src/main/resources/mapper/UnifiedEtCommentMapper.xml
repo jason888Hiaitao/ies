@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtCommentMapper">
+    <resultMap id="etCommentResultMap" type="com.example.wmsiescore.model.EtComment">
+        <id property="commentId" column="comment_id" />
+        <result property="questionId" column="question_id" />
+        <result property="indexId" column="comment_index" />
+        <result property="userId" column="user_id" />
+        <result property="contentMsg" column="content_msg" />
+        <result property="quoteId" column="quote_id" />
+        <result property="reId" column="re_id" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        comment_id, question_id, comment_index, user_id, content_msg, quote_id, re_id, create_time
+    </sql>
+
+    <!-- 标准CRUD操作 -->
+    
+    <!-- 1. 带条件的新增数据 -->
+    <insert id="insertSelective" parameterType="com.example.wmsiescore.model.EtComment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO et_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">question_id,</if>
+            <if test="indexId != null">comment_index,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="contentMsg != null">content_msg,</if>
+            <if test="quoteId != null">quote_id,</if>
+            <if test="reId != null">re_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">#{questionId},</if>
+            <if test="indexId != null">#{indexId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="contentMsg != null">#{contentMsg},</if>
+            <if test="quoteId != null">#{quoteId},</if>
+            <if test="reId != null">#{reId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 2. 带条件的插入数据（插入或更新） -->
+    <insert id="insertOrUpdate" parameterType="com.example.wmsiescore.model.EtComment">
+        INSERT INTO et_comment (question_id, comment_index, user_id, content_msg, quote_id, re_id, create_time)
+        VALUES (#{questionId}, #{indexId}, #{userId}, #{contentMsg}, #{quoteId}, #{reId}, #{createTime})
+        ON DUPLICATE KEY UPDATE
+        content_msg = VALUES(content_msg),
+        quote_id = VALUES(quote_id),
+        re_id = VALUES(re_id)
+    </insert>
+
+    <!-- 3. 带条件的查询 -->
+    <select id="selectByCondition" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_comment
+        <where>
+            <if test="commentId != null">comment_id = #{commentId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="indexId != null">AND comment_index = #{indexId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="quoteId != null">AND quote_id = #{quoteId}</if>
+            <if test="reId != null">AND re_id = #{reId}</if>
+            <if test="contentMsg != null and contentMsg != ''">
+                AND content_msg LIKE CONCAT('%', #{contentMsg}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 4. 带条件的分页查询 -->
+    <select id="selectByConditionWithPage" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_comment
+        <where>
+            <if test="condition.commentId != null">comment_id = #{condition.commentId}</if>
+            <if test="condition.questionId != null">AND question_id = #{condition.questionId}</if>
+            <if test="condition.indexId != null">AND comment_index = #{condition.indexId}</if>
+            <if test="condition.userId != null">AND user_id = #{condition.userId}</if>
+            <if test="condition.quoteId != null">AND quote_id = #{condition.quoteId}</if>
+            <if test="condition.reId != null">AND re_id = #{condition.reId}</if>
+            <if test="condition.contentMsg != null and condition.contentMsg != ''">
+                AND content_msg LIKE CONCAT('%', #{condition.contentMsg}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 5. 统计符合条件的记录数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM et_comment
+        <where>
+            <if test="commentId != null">comment_id = #{commentId}</if>
+            <if test="questionId != null">AND question_id = #{questionId}</if>
+            <if test="indexId != null">AND comment_index = #{indexId}</if>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="quoteId != null">AND quote_id = #{quoteId}</if>
+            <if test="reId != null">AND re_id = #{reId}</if>
+            <if test="contentMsg != null and contentMsg != ''">
+                AND content_msg LIKE CONCAT('%', #{contentMsg}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 6. 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO et_comment (question_id, comment_index, user_id, content_msg, quote_id, re_id, create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.questionId}, #{item.indexId}, #{item.userId}, #{item.contentMsg}, #{item.quoteId}, #{item.reId}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <!-- 7. 批量删除 -->
+    <delete id="batchDelete">
+        DELETE FROM et_comment WHERE comment_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 8. 带条件的更新 -->
+    <update id="updateByCondition" parameterType="com.example.wmsiescore.model.EtComment">
+        UPDATE et_comment
+        <set>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="indexId != null">comment_index = #{indexId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="contentMsg != null">content_msg = #{contentMsg},</if>
+            <if test="quoteId != null">quote_id = #{quoteId},</if>
+            <if test="reId != null">re_id = #{reId},</if>
+        </set>
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 兼容原有方法 -->
+    <select id="findAll" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_comment
+    </select>
+
+    <select id="findById" resultMap="etCommentResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM et_comment WHERE comment_id = #{commentId}
+    </select>
+
+    <insert id="insert" parameterType="com.example.wmsiescore.model.EtComment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO et_comment (question_id, comment_index, user_id, content_msg, quote_id, re_id, create_time)
+        VALUES (#{questionId}, #{indexId}, #{userId}, #{contentMsg}, #{quoteId}, #{reId}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.example.wmsiescore.model.EtComment">
+        UPDATE et_comment
+        SET question_id = #{questionId}, comment_index = #{indexId}, user_id = #{userId}, 
+            content_msg = #{contentMsg}, quote_id = #{quoteId}, re_id = #{reId}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM et_comment WHERE comment_id = #{commentId}
+    </delete>
+</mapper>

@@ -1,7 +1,7 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.mapper.EtUserGroupMapper;
-import com.example.wmsiescore.mapper.EtUserGroupMemberMapper;
+import com.example.wmsiescore.dao.UnifiedEtUserGroupDao;
+import com.example.wmsiescore.dao.UnifiedEtUserGroupMemberDao;
 import com.example.wmsiescore.model.EtUserGroup;
 import com.example.wmsiescore.model.EtUserGroupMember;
 import com.example.wmsiescore.service.EtUserGroupService;
@@ -15,17 +15,17 @@ import java.util.List;
 @Service
 public class EtUserGroupServiceImpl implements EtUserGroupService {
     @Autowired
-    private EtUserGroupMapper etUserGroupMapper;
+    private UnifiedEtUserGroupDao unifiedEtUserGroupDao;
     
     @Autowired
-    private EtUserGroupMemberMapper etUserGroupMemberMapper;
+    private UnifiedEtUserGroupMemberDao unifiedEtUserGroupMemberDao;
 
     @Override
     @Transactional
     public Long createUserGroup(EtUserGroup userGroup) {
         userGroup.setCreateTime(new Timestamp(System.currentTimeMillis()));
         userGroup.setStatus("active");
-        etUserGroupMapper.insertUserGroup(userGroup);
+        unifiedEtUserGroupDao.insertSelective(userGroup);
         return userGroup.getId();
     }
 
@@ -33,36 +33,36 @@ public class EtUserGroupServiceImpl implements EtUserGroupService {
     @Transactional
     public Boolean updateUserGroup(EtUserGroup userGroup) {
         userGroup.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        return etUserGroupMapper.updateUserGroup(userGroup) > 0;
+        return unifiedEtUserGroupDao.updateById(userGroup) > 0;
     }
 
     @Override
     @Transactional
     public Boolean deleteUserGroup(Long id) {
         // 先删除分组成员
-        List<EtUserGroupMember> members = etUserGroupMemberMapper.listMembersByGroupId(id);
+        List<EtUserGroupMember> members = unifiedEtUserGroupMemberDao.selectByUserGroupId(id);
         for (EtUserGroupMember member : members) {
-            etUserGroupMemberMapper.deleteUserGroupMember(member.getId());
+            unifiedEtUserGroupMemberDao.deleteById(member.getId());
         }
         // 再删除分组
-        return etUserGroupMapper.deleteUserGroup(id) > 0;
+        return unifiedEtUserGroupDao.deleteById(id) > 0;
     }
 
     @Override
     public EtUserGroup getUserGroupById(Long id) {
-        return etUserGroupMapper.getUserGroupById(id);
+        return unifiedEtUserGroupDao.selectById(id);
     }
 
     @Override
     public List<EtUserGroup> listAllUserGroups() {
-        return etUserGroupMapper.listAllUserGroups();
+        return unifiedEtUserGroupDao.selectAll();
     }
 
     @Override
     @Transactional
     public Boolean addUserToGroup(Long groupId, Long userId, String userName, String userAccount) {
         // 检查用户是否已在分组中
-        EtUserGroupMember existingMember = etUserGroupMemberMapper.getUserGroupMember(groupId, userId);
+        EtUserGroupMember existingMember = unifiedEtUserGroupMemberDao.selectByUserGroupIdAndUserId(groupId, userId);
         if (existingMember != null) {
             return false; // 用户已在分组中
         }
@@ -75,24 +75,28 @@ public class EtUserGroupServiceImpl implements EtUserGroupService {
         member.setStatus("active");
         member.setCreateTime(new Timestamp(System.currentTimeMillis()));
         
-        etUserGroupMemberMapper.insertUserGroupMember(member);
+        unifiedEtUserGroupMemberDao.insertSelective(member);
         return true;
     }
 
     @Override
     @Transactional
     public Boolean removeUserFromGroup(Long groupId, Long userId) {
-        return etUserGroupMemberMapper.deleteUserGroupMemberByUserId(groupId, userId) > 0;
+        EtUserGroupMember member = unifiedEtUserGroupMemberDao.selectByUserGroupIdAndUserId(groupId, userId);
+        if (member != null) {
+            return unifiedEtUserGroupMemberDao.deleteById(member.getId()) > 0;
+        }
+        return false;
     }
 
     @Override
     public List<EtUserGroupMember> getGroupMembers(Long groupId) {
-        return etUserGroupMemberMapper.listMembersByGroupId(groupId);
+        return unifiedEtUserGroupMemberDao.selectByUserGroupId(groupId);
     }
 
     @Override
     public List<EtUserGroupMember> getUserGroups(Long userId) {
-        return etUserGroupMemberMapper.listGroupsByUserId(userId);
+        return unifiedEtUserGroupMemberDao.selectByUserId(userId);
     }
 
     @Override
@@ -117,12 +121,22 @@ public class EtUserGroupServiceImpl implements EtUserGroupService {
     @Override
     @Transactional
     public Boolean activateUserGroup(Long id) {
-        return etUserGroupMapper.updateUserGroupStatus(id, "active") > 0;
+        EtUserGroup userGroup = unifiedEtUserGroupDao.selectById(id);
+        if (userGroup != null) {
+            userGroup.setStatus("active");
+            return unifiedEtUserGroupDao.updateById(userGroup) > 0;
+        }
+        return false;
     }
 
     @Override
     @Transactional
     public Boolean deactivateUserGroup(Long id) {
-        return etUserGroupMapper.updateUserGroupStatus(id, "inactive") > 0;
+        EtUserGroup userGroup = unifiedEtUserGroupDao.selectById(id);
+        if (userGroup != null) {
+            userGroup.setStatus("inactive");
+            return unifiedEtUserGroupDao.updateById(userGroup) > 0;
+        }
+        return false;
     }
 }

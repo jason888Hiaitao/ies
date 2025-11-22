@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.wmsiescore.mapper.EtExamAnalysisMapper">
+    <resultMap id="BaseResultMap" type="com.example.wmsiescore.model.EtUserExamHistory">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
+        <result column="exam_paper_id" property="examPaperId" jdbcType="BIGINT"/>
+        <result column="exam_title" property="examTitle" jdbcType="VARCHAR"/>
+        <result column="score" property="score" jdbcType="INTEGER"/>
+        <result column="total_score" property="totalScore" jdbcType="INTEGER"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="actual_duration" property="actualDuration" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, user_name, user_account, exam_paper_id, exam_title, score, total_score, 
+        duration, actual_duration, status, start_time, end_time, create_time, update_time
+    </sql>
+
+    <!-- 考试历史记录相关 -->
+    <insert id="insertUserExamHistory" parameterType="com.example.wmsiescore.model.EtUserExamHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO et_user_exam_history (user_id, user_name, user_account, exam_paper_id, exam_title, 
+        score, total_score, duration, actual_duration, status, start_time, end_time, create_time)
+        VALUES (#{userId}, #{userName}, #{userAccount}, #{examPaperId}, #{examTitle}, 
+        #{score}, #{totalScore}, #{duration}, #{actualDuration}, #{status}, #{startTime}, #{endTime}, #{createTime})
+    </insert>
+
+    <update id="updateUserExamHistory" parameterType="com.example.wmsiescore.model.EtUserExamHistory">
+        UPDATE et_user_exam_history 
+        SET user_name = #{userName}, 
+            user_account = #{userAccount}, 
+            exam_title = #{examTitle}, 
+            score = #{score}, 
+            total_score = #{totalScore}, 
+            duration = #{duration}, 
+            actual_duration = #{actualDuration}, 
+            status = #{status}, 
+            start_time = #{startTime}, 
+            end_time = #{endTime}, 
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getUserExamHistory" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE user_id = #{userId} AND exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="listExamHistoriesByExam" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listExamHistoriesByUser" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listCompletedExams" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ORDER BY score DESC, end_time ASC
+    </select>
+
+    <select id="listAbsentExams" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'absent'
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计相关 -->
+    <select id="countTotalParticipants" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId}
+    </select>
+
+    <select id="countActualParticipants" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="countAbsentParticipants" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'absent'
+    </select>
+
+    <select id="calculateAverageScore" resultType="java.math.BigDecimal">
+        SELECT COALESCE(AVG(score), 0) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="getMaxScore" resultType="java.lang.Integer">
+        SELECT COALESCE(MAX(score), 0) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="getMinScore" resultType="java.lang.Integer">
+        SELECT COALESCE(MIN(score), 0) 
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+    </select>
+
+    <select id="calculatePassRate" resultType="java.math.BigDecimal">
+        SELECT 
+            CASE 
+                WHEN total.total_count = 0 THEN 0
+                ELSE ROUND(passed.pass_count * 100.0 / total.total_count, 2)
+            END as pass_rate
+        FROM (
+            SELECT COUNT(*) as total_count
+            FROM et_user_exam_history 
+            WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ) total,
+        (
+            SELECT COUNT(*) as pass_count
+            FROM et_user_exam_history 
+            WHERE exam_paper_id = #{examPaperId} AND status = 'completed' AND score >= #{passScore}
+        ) passed
+    </select>
+
+    <!-- 排名相关 -->
+    <select id="getExamRankings" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ORDER BY score DESC, end_time ASC
+    </select>
+
+    <select id="getUserExamDurations" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId} AND status = 'completed'
+        ORDER BY actual_duration ASC
+    </select>
+
+    <!-- 导出相关 -->
+    <select id="getExamResultsForExport" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM et_user_exam_history 
+        WHERE exam_paper_id = #{examPaperId}
+        ORDER BY score DESC, user_name ASC
+    </select>
+</mapper>
