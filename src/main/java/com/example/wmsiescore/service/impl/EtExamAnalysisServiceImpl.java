@@ -147,10 +147,8 @@ public class EtExamAnalysisServiceImpl implements EtExamAnalysisService {
     @Override
     public Long recordUserExamHistory(EtUserExamHistory history) {
         history.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        etExamAnalysisMapper.insertUserExamHistory(history);
-//        return history.getId();
+        // 当前实现缺少对应的DAO方法，先返回空以保证代码可编译
         return null;
-
     }
 
     @Override

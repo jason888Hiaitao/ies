@@ -57,10 +57,9 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Transactional
     public Boolean deleteQuestion(Long id) {
         // 先删除试卷中的关联
-        // 由于没有对应的方法，暂时返回空列表
-        List<EtExamPaperQuestion> examPaperQuestions = new java.util.ArrayList<>();
+        List<EtExamPaperQuestion> examPaperQuestions = unifiedEtExamPaperQuestionDao.selectByQuestionId(id);
         for (EtExamPaperQuestion epq : examPaperQuestions) {
-            etExamPaperQuestionMapper.deleteExamPaperQuestion(epq.getId());
+            unifiedEtExamPaperQuestionDao.deleteById(epq.getId());
         }
         // 再删除试题
         return unifiedEtQuestionDao.deleteById(id) > 0;
