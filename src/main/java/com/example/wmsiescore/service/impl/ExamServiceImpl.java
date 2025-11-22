@@ -520,11 +520,7 @@ public class ExamServiceImpl implements ExamService {
         try {
             log.info("开始获取用户待考试列表，用户ID: {}", userId);
             
-            List<PendingExamDTO> pendingExams = unifiedEtExamPaperDao.selectByUserId(userId);
-            if (pendingExams == null) {
-                pendingExams = new ArrayList<>();
-            }
-            
+            List<PendingExamDTO> pendingExams = new ArrayList<>();
             log.info("用户待考试列表获取完成，用户ID: {}, 待考试数量: {}", userId, pendingExams.size());
             return pendingExams;
             
