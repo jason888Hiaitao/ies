@@ -1,8 +1,8 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.dao.UnifiedEtQuestionDao;
-import com.example.wmsiescore.dao.UnifiedEtExamPaperQuestionDao;
 import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperQuestionDao;
+import com.example.wmsiescore.dao.UnifiedEtQuestionDao;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.model.EtExamPaperQuestion;
 import com.example.wmsiescore.model.EtQuestion;
@@ -12,16 +12,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EtQuestionServiceImpl implements EtQuestionService {
     @Autowired
     private UnifiedEtQuestionDao unifiedEtQuestionDao;
-    
+
     @Autowired
     private UnifiedEtExamPaperQuestionDao unifiedEtExamPaperQuestionDao;
-    
+
     @Autowired
     private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
 
@@ -56,13 +58,10 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean deleteQuestion(Long id) {
-        // 先删除试卷中的关联
-        // 由于没有对应的方法，暂时返回空列表
-        List<EtExamPaperQuestion> examPaperQuestions = new java.util.ArrayList<>();
+        List<EtExamPaperQuestion> examPaperQuestions = unifiedEtExamPaperQuestionDao.selectByQuestionId(id);
         for (EtExamPaperQuestion epq : examPaperQuestions) {
-            etExamPaperQuestionMapper.deleteExamPaperQuestion(epq.getId());
+            unifiedEtExamPaperQuestionDao.deleteById(epq.getId());
         }
-        // 再删除试题
         return unifiedEtQuestionDao.deleteById(id) > 0;
     }
 
@@ -78,7 +77,7 @@ public class EtQuestionServiceImpl implements EtQuestionService {
 
     @Override
     public List<EtQuestion> getQuestionsByType(Long questionTypeId) {
-        return etQuestionMapper.listQuestionsByType(questionTypeId);
+        return unifiedEtQuestionDao.selectByQuestionTypeId(questionTypeId);
     }
 
     @Override
@@ -88,12 +87,12 @@ public class EtQuestionServiceImpl implements EtQuestionService {
 
     @Override
     public List<EtQuestion> getVisibleQuestions() {
-        return etQuestionMapper.listVisibleQuestions();
+        return unifiedEtQuestionDao.selectByIsVisible(true);
     }
 
     @Override
     public List<EtQuestion> searchQuestions(String keyword) {
-        return etQuestionMapper.searchQuestions(keyword);
+        return unifiedEtQuestionDao.selectByNameLike(keyword);
     }
 
     @Override
@@ -109,56 +108,74 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean updateQuestionStatistics(Long id, Integer exposeTimes, Integer rightTimes, Integer wrongTimes) {
-        return etQuestionMapper.updateQuestionStatistics(id, exposeTimes, rightTimes, wrongTimes) > 0;
+        EtQuestion question = new EtQuestion();
+        question.setId(id);
+        question.setExposeTimes(exposeTimes);
+        question.setRightTimes(rightTimes);
+        question.setWrongTimes(wrongTimes);
+        question.setLastModify(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtQuestionDao.updateById(question) > 0;
     }
 
     @Override
     @Transactional
     public Boolean setQuestionVisibility(Long id, Boolean isVisible) {
-        return etQuestionMapper.updateQuestionVisibility(id, isVisible) > 0;
+        EtQuestion question = new EtQuestion();
+        question.setId(id);
+        question.setIsVisible(isVisible);
+        question.setLastModify(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtQuestionDao.updateById(question) > 0;
     }
 
     @Override
     @Transactional
     public Boolean addQuestionToExamPaper(Long examPaperId, Long questionId, Integer score) {
-        // 检查试题是否已在试卷中
-        EtExamPaperQuestion existing = etExamPaperQuestionMapper.getExamPaperQuestion(examPaperId, questionId);
+        EtExamPaperQuestion existing = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
         if (existing != null) {
-            return false; // 试题已存在
+            return false;
         }
-        
+
         EtExamPaperQuestion examPaperQuestion = new EtExamPaperQuestion();
         examPaperQuestion.setExamPaperId(examPaperId);
         examPaperQuestion.setQuestionId(questionId);
         examPaperQuestion.setScore(score);
         examPaperQuestion.setStatus("active");
-        
-        // 获取最大排序号
-        Integer maxSortOrder = etExamPaperQuestionMapper.getMaxSortOrder(examPaperId);
-        examPaperQuestion.setSortOrder(maxSortOrder != null ? maxSortOrder + 1 : 1);
+
+        List<EtExamPaperQuestion> existingQuestions = unifiedEtExamPaperQuestionDao.selectByExamPaperId(examPaperId);
+        Integer maxSortOrder = existingQuestions.stream()
+            .map(EtExamPaperQuestion::getSortOrder)
+            .filter(Objects::nonNull)
+            .max(Integer::compareTo)
+            .orElse(0);
+        examPaperQuestion.setSortOrder(maxSortOrder + 1);
         examPaperQuestion.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        
-        etExamPaperQuestionMapper.insertExamPaperQuestion(examPaperQuestion);
+        examPaperQuestion.setUpdateTime(examPaperQuestion.getCreateTime());
+
+        unifiedEtExamPaperQuestionDao.insertSelective(examPaperQuestion);
         return true;
     }
 
     @Override
     @Transactional
     public Boolean removeQuestionFromExamPaper(Long examPaperId, Long questionId) {
-        return etExamPaperQuestionMapper.deleteExamPaperQuestionByPaperAndQuestion(examPaperId, questionId) > 0;
+        EtExamPaperQuestion relation = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
+        if (relation == null) {
+            return false;
+        }
+        return unifiedEtExamPaperQuestionDao.deleteById(relation.getId()) > 0;
     }
 
     @Override
     public List<EtExamPaperQuestion> getQuestionsByExamPaper(Long examPaperId) {
-        return etExamPaperQuestionMapper.listQuestionsByExamPaper(examPaperId);
+        return unifiedEtExamPaperQuestionDao.selectByExamPaperId(examPaperId);
     }
 
     @Override
     @Transactional
     public Boolean batchAddQuestionsToExamPaper(Long examPaperId, List<Long> questionIds) {
         for (Long questionId : questionIds) {
-            EtQuestion question = etQuestionMapper.getQuestionById(questionId);
-            if (question != null) {
+            EtQuestion question = unifiedEtQuestionDao.selectById(questionId);
+            if (question != null && question.getPoints() != null) {
                 addQuestionToExamPaper(examPaperId, questionId, question.getPoints().intValue());
             }
         }
@@ -177,21 +194,22 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean adjustQuestionOrder(Long examPaperQuestionId, Integer sortOrder) {
-        return etExamPaperQuestionMapper.updateQuestionSortOrder(examPaperQuestionId, sortOrder) > 0;
+        EtExamPaperQuestion update = new EtExamPaperQuestion();
+        update.setId(examPaperQuestionId);
+        update.setSortOrder(sortOrder);
+        update.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtExamPaperQuestionDao.updateById(update) > 0;
     }
 
     @Override
     @Transactional
     public Boolean setExamPaperPermission(Long examPaperId, String targetGroupId, String targetUserId) {
-        EtExamPaper examPaper = etExamPaperMapper.getExamPaperById(examPaperId);
+        EtExamPaper examPaper = unifiedEtExamPaperDao.selectById(examPaperId);
         if (examPaper == null) {
             return false;
         }
-//        examPaper.setTargetGroupId(targetGroupId);
-//        examPaper.setTargetUserId(targetUserId);
         examPaper.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        return etExamPaperMapper.updateExamPaper(examPaper) > 0;
+        return unifiedEtExamPaperDao.updateById(examPaper) > 0;
     }
 
-    
 }

@@ -2,6 +2,7 @@ package com.example.wmsiescore.service.impl;
 
 import com.example.wmsiescore.dao.UnifiedEtExamAnalysisDao;
 import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
+import com.example.wmsiescore.dao.UnifiedEtUserExamHistoryDao;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.model.EtUserExamHistory;
 import com.example.wmsiescore.model.ExamRanking;
@@ -23,6 +24,9 @@ public class EtExamAnalysisServiceImpl implements EtExamAnalysisService {
     
     @Autowired
     private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
+
+    @Autowired
+    private UnifiedEtUserExamHistoryDao unifiedEtUserExamHistoryDao;
 
     @Override
     public List<ExamRanking> getExamRankings(Long examPaperId) {
@@ -147,10 +151,8 @@ public class EtExamAnalysisServiceImpl implements EtExamAnalysisService {
     @Override
     public Long recordUserExamHistory(EtUserExamHistory history) {
         history.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        etExamAnalysisMapper.insertUserExamHistory(history);
-//        return history.getId();
-        return null;
-
+        unifiedEtUserExamHistoryDao.insertSelective(history);
+        return history.getHistId();
     }
 
     @Override

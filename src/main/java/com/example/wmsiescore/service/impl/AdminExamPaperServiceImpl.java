@@ -29,7 +29,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
         int offset = (queryDTO.getPageNum() - 1) * queryDTO.getPageSize();
         
         // 查询总数
-        Long total = etExamPaperDao.countExamPaperList(
+        Long total = unifiedEtExamPaperDao.countExamPaperList(
             queryDTO.getName(),
             queryDTO.getStatus(),
             queryDTO.getValiddpt(),
@@ -38,7 +38,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
         );
         
         // 查询列表数据
-        List<EtExamPaper> examPaperList = etExamPaperDao.selectExamPaperList(
+        List<EtExamPaper> examPaperList = unifiedEtExamPaperDao.selectExamPaperList(
             queryDTO.getName(),
             queryDTO.getStatus(),
             queryDTO.getValiddpt(),
@@ -81,7 +81,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
         
         try {
             for (Long id : ids) {
-                etExamPaperDao.deleteById(id);
+                unifiedEtExamPaperDao.deleteById(id);
             }
             return true;
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
             examPaper.setCreateTime(now);
             examPaper.setUpdateTime(now);
             
-            return etExamPaperDao.insert(examPaper) > 0;
+            return unifiedEtExamPaperDao.insert(examPaper) > 0;
         } catch (Exception e) {
             return false;
         }
@@ -151,7 +151,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
             examPaper.setAnswerHide(examPaperSaveDTO.getAnswerHide());
             examPaper.setUpdateTime(new Timestamp(System.currentTimeMillis()));
             
-            return etExamPaperDao.updateById(examPaper) > 0;
+            return unifiedEtExamPaperDao.updateById(examPaper) > 0;
         } catch (Exception e) {
             return false;
         }
@@ -162,7 +162,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
      */
     private Boolean deleteExamPaper(Long id) {
         try {
-            return etExamPaperDao.deleteById(id) > 0;
+            return unifiedEtExamPaperDao.deleteById(id) > 0;
         } catch (Exception e) {
             return false;
         }
