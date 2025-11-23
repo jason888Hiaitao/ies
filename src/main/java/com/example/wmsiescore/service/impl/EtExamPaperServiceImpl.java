@@ -4,6 +4,7 @@ import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.model.PendingExamDTO;
 import com.example.wmsiescore.service.EtExamPaperService;
+import com.example.wmsiescore.service.PendingExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,9 @@ import java.util.List;
 public class EtExamPaperServiceImpl implements EtExamPaperService {
     @Autowired
     private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
+
+    @Autowired
+    private PendingExamService pendingExamService;
 
     @Override
     @Transactional
@@ -142,14 +146,24 @@ public class EtExamPaperServiceImpl implements EtExamPaperService {
 
     @Override
     public List<EtExamPaper> getExamPapersForUser(String userId) {
-        // 需要自定义查询方法，暂时返回空列表
-        return new ArrayList<>();
+        try {
+            Long parsedUserId = Long.parseLong(userId);
+            List<EtExamPaper> papers = unifiedEtExamPaperDao.getVisibleExamPapersForUser(parsedUserId);
+            return papers == null ? new ArrayList<>() : papers;
+        } catch (NumberFormatException e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public List<EtExamPaper> getExamPapersForGroup(String groupId) {
-        // 需要自定义查询方法，暂时返回空列表
-        return new ArrayList<>();
+        try {
+            Long fieldId = Long.parseLong(groupId);
+            List<EtExamPaper> papers = unifiedEtExamPaperDao.getExamPapersByFieldIds(java.util.Collections.singletonList(fieldId));
+            return papers == null ? new ArrayList<>() : papers;
+        } catch (NumberFormatException e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -183,19 +197,18 @@ public class EtExamPaperServiceImpl implements EtExamPaperService {
 
     @Override
     public List<Long> getCompletedExamPaperIds(Long userId) {
-        // 需要自定义查询方法，暂时返回空列表
-        return new ArrayList<>();
+        List<Long> ids = unifiedEtExamPaperDao.getCompletedExamPaperIds(userId);
+        return ids == null ? new ArrayList<>() : ids;
     }
 
     @Override
     public List<EtExamPaper> getVisibleExamPapersForUser(Long userId) {
-        // 需要自定义查询方法，暂时返回空列表
-        return new ArrayList<>();
+        List<EtExamPaper> papers = unifiedEtExamPaperDao.getVisibleExamPapersForUser(userId);
+        return papers == null ? new ArrayList<>() : papers;
     }
 
     @Override
     public List<PendingExamDTO> getPendingExamsForUser(Long userId) {
-        // 需要自定义查询方法，暂时返回空列表
-        return new ArrayList<>();
+        return pendingExamService.getPendingExamsForUser(userId);
     }
 }

@@ -77,7 +77,7 @@ public class EtQuestionServiceImpl implements EtQuestionService {
 
     @Override
     public List<EtQuestion> getQuestionsByType(Long questionTypeId) {
-        return etQuestionMapper.listQuestionsByType(questionTypeId);
+        return unifiedEtQuestionDao.selectByQuestionTypeId(questionTypeId);
     }
 
     @Override
@@ -87,12 +87,12 @@ public class EtQuestionServiceImpl implements EtQuestionService {
 
     @Override
     public List<EtQuestion> getVisibleQuestions() {
-        return etQuestionMapper.listVisibleQuestions();
+        return unifiedEtQuestionDao.selectByIsVisible(true);
     }
 
     @Override
     public List<EtQuestion> searchQuestions(String keyword) {
-        return etQuestionMapper.searchQuestions(keyword);
+        return unifiedEtQuestionDao.selectByNameLike(keyword);
     }
 
     @Override
@@ -108,56 +108,74 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean updateQuestionStatistics(Long id, Integer exposeTimes, Integer rightTimes, Integer wrongTimes) {
-        return etQuestionMapper.updateQuestionStatistics(id, exposeTimes, rightTimes, wrongTimes) > 0;
+        EtQuestion question = new EtQuestion();
+        question.setId(id);
+        question.setExposeTimes(exposeTimes);
+        question.setRightTimes(rightTimes);
+        question.setWrongTimes(wrongTimes);
+        question.setLastModify(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtQuestionDao.updateById(question) > 0;
     }
 
     @Override
     @Transactional
     public Boolean setQuestionVisibility(Long id, Boolean isVisible) {
-        return etQuestionMapper.updateQuestionVisibility(id, isVisible) > 0;
+        EtQuestion question = new EtQuestion();
+        question.setId(id);
+        question.setIsVisible(isVisible);
+        question.setLastModify(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtQuestionDao.updateById(question) > 0;
     }
 
     @Override
     @Transactional
     public Boolean addQuestionToExamPaper(Long examPaperId, Long questionId, Integer score) {
         // 检查试题是否已在试卷中
-        EtExamPaperQuestion existing = etExamPaperQuestionMapper.getExamPaperQuestion(examPaperId, questionId);
+        EtExamPaperQuestion existing = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
         if (existing != null) {
             return false; // 试题已存在
         }
-        
+
         EtExamPaperQuestion examPaperQuestion = new EtExamPaperQuestion();
         examPaperQuestion.setExamPaperId(examPaperId);
         examPaperQuestion.setQuestionId(questionId);
         examPaperQuestion.setScore(score);
         examPaperQuestion.setStatus("active");
-        
+
         // 获取最大排序号
-        Integer maxSortOrder = etExamPaperQuestionMapper.getMaxSortOrder(examPaperId);
+        List<EtExamPaperQuestion> existingQuestions = unifiedEtExamPaperQuestionDao.selectByExamPaperIdOrderByQuestionOrder(examPaperId);
+        Integer maxSortOrder = existingQuestions == null || existingQuestions.isEmpty() ? 0 : existingQuestions.stream()
+                .map(EtExamPaperQuestion::getSortOrder)
+                .filter(order -> order != null)
+                .max(Integer::compareTo)
+                .orElse(0);
         examPaperQuestion.setSortOrder(maxSortOrder != null ? maxSortOrder + 1 : 1);
         examPaperQuestion.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        
-        etExamPaperQuestionMapper.insertExamPaperQuestion(examPaperQuestion);
-        return true;
+
+        return unifiedEtExamPaperQuestionDao.insertSelective(examPaperQuestion) > 0;
     }
 
     @Override
     @Transactional
     public Boolean removeQuestionFromExamPaper(Long examPaperId, Long questionId) {
-        return etExamPaperQuestionMapper.deleteExamPaperQuestionByPaperAndQuestion(examPaperId, questionId) > 0;
+        EtExamPaperQuestion existing = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
+        if (existing == null) {
+            return false;
+        }
+        return unifiedEtExamPaperQuestionDao.deleteById(existing.getId()) > 0;
     }
 
     @Override
     public List<EtExamPaperQuestion> getQuestionsByExamPaper(Long examPaperId) {
-        return etExamPaperQuestionMapper.listQuestionsByExamPaper(examPaperId);
+        return unifiedEtExamPaperQuestionDao.selectByExamPaperId(examPaperId);
     }
 
     @Override
     @Transactional
     public Boolean batchAddQuestionsToExamPaper(Long examPaperId, List<Long> questionIds) {
         for (Long questionId : questionIds) {
-            EtQuestion question = etQuestionMapper.getQuestionById(questionId);
-            if (question != null) {
+            EtQuestion question = unifiedEtQuestionDao.selectById(questionId);
+            if (question != null && question.getPoints() != null) {
                 addQuestionToExamPaper(examPaperId, questionId, question.getPoints().intValue());
             }
         }
@@ -176,20 +194,32 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean adjustQuestionOrder(Long examPaperQuestionId, Integer sortOrder) {
-        return etExamPaperQuestionMapper.updateQuestionSortOrder(examPaperQuestionId, sortOrder) > 0;
+        EtExamPaperQuestion question = new EtExamPaperQuestion();
+        question.setId(examPaperQuestionId);
+        question.setSortOrder(sortOrder);
+        question.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtExamPaperQuestionDao.updateById(question) > 0;
     }
 
     @Override
     @Transactional
     public Boolean setExamPaperPermission(Long examPaperId, String targetGroupId, String targetUserId) {
-        EtExamPaper examPaper = etExamPaperMapper.getExamPaperById(examPaperId);
+        EtExamPaper examPaper = unifiedEtExamPaperDao.selectById(examPaperId);
         if (examPaper == null) {
             return false;
         }
-//        examPaper.setTargetGroupId(targetGroupId);
-//        examPaper.setTargetUserId(targetUserId);
+        if (targetGroupId != null) {
+            try {
+                examPaper.setGroupId(Long.valueOf(targetGroupId));
+            } catch (NumberFormatException ignored) {
+                // ignore invalid group id
+            }
+        }
+        if (targetUserId != null) {
+            examPaper.setCreator(targetUserId);
+        }
         examPaper.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        return etExamPaperMapper.updateExamPaper(examPaper) > 0;
+        return unifiedEtExamPaperDao.updateById(examPaper) > 0;
     }
 
     

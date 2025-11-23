@@ -89,8 +89,10 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
     public List<EtUserExamHistory> getUserExamHistory(Long userId) {
         try {
             log.info("获取用户考试历史记录，用户ID: {}", userId);
-            // 需要自定义查询方法，暂时返回空列表
-            List<EtUserExamHistory> histories = new ArrayList<>();
+            List<EtUserExamHistory> histories = unifiedEtUserExamHistoryDao.selectByUserId(userId);
+            if (histories == null) {
+                histories = new ArrayList<>();
+            }
             log.info("获取到用户{}的{}条考试历史记录", userId, histories.size());
             return histories;
         } catch (Exception e) {
@@ -103,8 +105,10 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
     public List<EtUserExamHistory> getUserExamHistoryWithSubmitTime(Long userId) {
         try {
             log.info("获取用户已完成的考试历史记录，用户ID: {}", userId);
-            // 需要自定义查询方法，暂时返回空列表
-            List<EtUserExamHistory> histories = new ArrayList<>();
+            List<EtUserExamHistory> histories = unifiedEtUserExamHistoryDao.getUserExamHistoryWithSubmitTime(userId);
+            if (histories == null) {
+                histories = new ArrayList<>();
+            }
             log.info("获取到用户{}的{}条已完成考试历史记录", userId, histories.size());
             return histories;
         } catch (Exception e) {
@@ -117,8 +121,8 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
     public int countUserAttempts(Long userId, Long examPaperId) {
         try {
             log.info("统计用户对指定试卷的考试次数，用户ID: {}, 试卷ID: {}", userId, examPaperId);
-            // 需要自定义查询方法，暂时返回0
-            int attempts = 0;
+            List<EtUserExamHistory> attemptsList = unifiedEtUserExamHistoryDao.selectByUserIdAndExamPaperId(userId, examPaperId);
+            int attempts = attemptsList == null ? 0 : attemptsList.size();
             log.info("用户{}对试卷{}的考试次数: {}", userId, examPaperId, attempts);
             return attempts;
         } catch (Exception e) {
@@ -131,8 +135,10 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
     public List<Long> getCompletedExamPaperIds(Long userId) {
         try {
             log.info("获取用户已完成的试卷ID列表，用户ID: {}", userId);
-            // 需要自定义查询方法，暂时返回空列表
-            List<Long> examPaperIds = new ArrayList<>();
+            List<Long> examPaperIds = unifiedEtUserExamHistoryDao.getCompletedExamPaperIds(userId);
+            if (examPaperIds == null) {
+                examPaperIds = new ArrayList<>();
+            }
             log.info("获取到用户{}已完成的{}个试卷", userId, examPaperIds.size());
             return examPaperIds;
         } catch (Exception e) {
