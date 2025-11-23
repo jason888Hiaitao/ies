@@ -18,22 +18,12 @@
     </properties>
     <repositories>
         <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-        <repository>
             <id>aliyunmaven</id>
             <name>Aliyun Maven</name>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
     </repositories>
     <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </pluginRepository>
         <pluginRepository>
             <id>aliyunmaven</id>
             <name>Aliyun Maven</name>

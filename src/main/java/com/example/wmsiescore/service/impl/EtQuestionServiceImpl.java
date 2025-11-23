@@ -1,8 +1,8 @@
 package com.example.wmsiescore.service.impl;
 
-import com.example.wmsiescore.dao.UnifiedEtQuestionDao;
-import com.example.wmsiescore.dao.UnifiedEtExamPaperQuestionDao;
 import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
+import com.example.wmsiescore.dao.UnifiedEtExamPaperQuestionDao;
+import com.example.wmsiescore.dao.UnifiedEtQuestionDao;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.model.EtExamPaperQuestion;
 import com.example.wmsiescore.model.EtQuestion;
@@ -12,16 +12,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EtQuestionServiceImpl implements EtQuestionService {
     @Autowired
     private UnifiedEtQuestionDao unifiedEtQuestionDao;
-    
+
     @Autowired
     private UnifiedEtExamPaperQuestionDao unifiedEtExamPaperQuestionDao;
-    
+
     @Autowired
     private UnifiedEtExamPaperDao unifiedEtExamPaperDao;
 
@@ -56,12 +58,10 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean deleteQuestion(Long id) {
-        // 先删除试卷中的关联
         List<EtExamPaperQuestion> examPaperQuestions = unifiedEtExamPaperQuestionDao.selectByQuestionId(id);
         for (EtExamPaperQuestion epq : examPaperQuestions) {
             unifiedEtExamPaperQuestionDao.deleteById(epq.getId());
         }
-        // 再删除试题
         return unifiedEtQuestionDao.deleteById(id) > 0;
     }
 
@@ -130,10 +130,9 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean addQuestionToExamPaper(Long examPaperId, Long questionId, Integer score) {
-        // 检查试题是否已在试卷中
         EtExamPaperQuestion existing = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
         if (existing != null) {
-            return false; // 试题已存在
+            return false;
         }
 
         EtExamPaperQuestion examPaperQuestion = new EtExamPaperQuestion();
@@ -142,27 +141,28 @@ public class EtQuestionServiceImpl implements EtQuestionService {
         examPaperQuestion.setScore(score);
         examPaperQuestion.setStatus("active");
 
-        // 获取最大排序号
-        List<EtExamPaperQuestion> existingQuestions = unifiedEtExamPaperQuestionDao.selectByExamPaperIdOrderByQuestionOrder(examPaperId);
-        Integer maxSortOrder = existingQuestions == null || existingQuestions.isEmpty() ? 0 : existingQuestions.stream()
-                .map(EtExamPaperQuestion::getSortOrder)
-                .filter(order -> order != null)
-                .max(Integer::compareTo)
-                .orElse(0);
-        examPaperQuestion.setSortOrder(maxSortOrder != null ? maxSortOrder + 1 : 1);
+        List<EtExamPaperQuestion> existingQuestions = unifiedEtExamPaperQuestionDao.selectByExamPaperId(examPaperId);
+        Integer maxSortOrder = existingQuestions.stream()
+            .map(EtExamPaperQuestion::getSortOrder)
+            .filter(Objects::nonNull)
+            .max(Integer::compareTo)
+            .orElse(0);
+        examPaperQuestion.setSortOrder(maxSortOrder + 1);
         examPaperQuestion.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        examPaperQuestion.setUpdateTime(examPaperQuestion.getCreateTime());
 
-        return unifiedEtExamPaperQuestionDao.insertSelective(examPaperQuestion) > 0;
+        unifiedEtExamPaperQuestionDao.insertSelective(examPaperQuestion);
+        return true;
     }
 
     @Override
     @Transactional
     public Boolean removeQuestionFromExamPaper(Long examPaperId, Long questionId) {
-        EtExamPaperQuestion existing = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
-        if (existing == null) {
+        EtExamPaperQuestion relation = unifiedEtExamPaperQuestionDao.selectByExamPaperIdAndQuestionId(examPaperId, questionId);
+        if (relation == null) {
             return false;
         }
-        return unifiedEtExamPaperQuestionDao.deleteById(existing.getId()) > 0;
+        return unifiedEtExamPaperQuestionDao.deleteById(relation.getId()) > 0;
     }
 
     @Override
@@ -194,11 +194,11 @@ public class EtQuestionServiceImpl implements EtQuestionService {
     @Override
     @Transactional
     public Boolean adjustQuestionOrder(Long examPaperQuestionId, Integer sortOrder) {
-        EtExamPaperQuestion question = new EtExamPaperQuestion();
-        question.setId(examPaperQuestionId);
-        question.setSortOrder(sortOrder);
-        question.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        return unifiedEtExamPaperQuestionDao.updateById(question) > 0;
+        EtExamPaperQuestion update = new EtExamPaperQuestion();
+        update.setId(examPaperQuestionId);
+        update.setSortOrder(sortOrder);
+        update.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+        return unifiedEtExamPaperQuestionDao.updateById(update) > 0;
     }
 
     @Override
@@ -208,19 +208,8 @@ public class EtQuestionServiceImpl implements EtQuestionService {
         if (examPaper == null) {
             return false;
         }
-        if (targetGroupId != null) {
-            try {
-                examPaper.setGroupId(Long.valueOf(targetGroupId));
-            } catch (NumberFormatException ignored) {
-                // ignore invalid group id
-            }
-        }
-        if (targetUserId != null) {
-            examPaper.setCreator(targetUserId);
-        }
         examPaper.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         return unifiedEtExamPaperDao.updateById(examPaper) > 0;
     }
 
-    
 }

@@ -27,18 +27,26 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
     @Override
     public PageResult getExamPaperList(ExamPaperQueryDTO queryDTO) {
         int offset = (queryDTO.getPageNum() - 1) * queryDTO.getPageSize();
-
-        EtExamPaperQuery query = new EtExamPaperQuery();
-        query.setName(queryDTO.getName());
-        query.setStatus(queryDTO.getStatus());
-        query.setValiddpt(queryDTO.getValiddpt());
-        query.setValidsource(queryDTO.getValidsource());
-        query.setPaperType(queryDTO.getPaperType());
-        query.setOffset(offset);
-        query.setPageSize(queryDTO.getPageSize());
-
-        Long total = (long) unifiedEtExamPaperDao.countByCondition(query);
-        List<EtExamPaper> examPaperList = unifiedEtExamPaperDao.selectByConditionWithPage(query);
+        
+        // 查询总数
+        Long total = unifiedEtExamPaperDao.countExamPaperList(
+            queryDTO.getName(),
+            queryDTO.getStatus(),
+            queryDTO.getValiddpt(),
+            queryDTO.getValidsource(),
+            queryDTO.getPaperType()
+        );
+        
+        // 查询列表数据
+        List<EtExamPaper> examPaperList = unifiedEtExamPaperDao.selectExamPaperList(
+            queryDTO.getName(),
+            queryDTO.getStatus(),
+            queryDTO.getValiddpt(),
+            queryDTO.getValidsource(),
+            queryDTO.getPaperType(),
+            offset,
+            queryDTO.getPageSize()
+        );
 
         return new PageResult(queryDTO.getPageNum(), queryDTO.getPageSize(), total, examPaperList);
     }
@@ -109,8 +117,8 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
             Timestamp now = new Timestamp(System.currentTimeMillis());
             examPaper.setCreateTime(now);
             examPaper.setUpdateTime(now);
-
-            return unifiedEtExamPaperDao.insertSelective(examPaper) > 0;
+            
+            return unifiedEtExamPaperDao.insert(examPaper) > 0;
         } catch (Exception e) {
             return false;
         }
@@ -142,7 +150,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
             examPaper.setExamCount(examPaperSaveDTO.getExamCount());
             examPaper.setAnswerHide(examPaperSaveDTO.getAnswerHide());
             examPaper.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-
+            
             return unifiedEtExamPaperDao.updateById(examPaper) > 0;
         } catch (Exception e) {
             return false;
