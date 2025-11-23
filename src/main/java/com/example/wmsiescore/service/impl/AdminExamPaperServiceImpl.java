@@ -4,6 +4,7 @@ import com.example.wmsiescore.dao.UnifiedEtExamPaperDao;
 import com.example.wmsiescore.dto.ExamPaperQueryDTO;
 import com.example.wmsiescore.dto.ExamPaperSaveDTO;
 import com.example.wmsiescore.dto.PageResult;
+import com.example.wmsiescore.dto.query.EtExamPaperQuery;
 import com.example.wmsiescore.model.EtExamPaper;
 import com.example.wmsiescore.service.AdminExamPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
     
     @Override
     public PageResult getExamPaperList(ExamPaperQueryDTO queryDTO) {
-        // 计算偏移量
         int offset = (queryDTO.getPageNum() - 1) * queryDTO.getPageSize();
         
         // 查询总数
@@ -78,7 +78,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
         if (CollectionUtils.isEmpty(ids)) {
             return false;
         }
-        
+
         try {
             for (Long id : ids) {
                 unifiedEtExamPaperDao.deleteById(id);

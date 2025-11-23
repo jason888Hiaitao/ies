@@ -17,6 +17,7 @@ import com.example.wmsiescore.dto.ExamSubmissionDTO;
 import com.example.wmsiescore.dto.ExamStartResult;
 import com.example.wmsiescore.vo.QuestionVO;
 import com.example.wmsiescore.service.ExamService;
+import com.example.wmsiescore.service.PendingExamService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,9 @@ public class ExamServiceImpl implements ExamService {
     
     @Autowired
     private UnifiedEtUserExamHistoryDao unifiedEtUserExamHistoryDao;
+
+    @Autowired
+    private PendingExamService pendingExamService;
 
     @Override
     public ExamStartResult startExam(Long userId, Long examPaperId) {
