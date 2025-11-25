@@ -91,7 +91,7 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
             log.info("获取用户考试历史记录，用户ID: {}", userId);
             List<EtUserExamHistory> histories = unifiedEtUserExamHistoryDao.selectByUserId(userId);
             if (histories == null) {
-                histories = new ArrayList<>();
+                histories = new java.util.ArrayList<>();
             }
             log.info("获取到用户{}的{}条考试历史记录", userId, histories.size());
             return histories;
@@ -107,7 +107,7 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
             log.info("获取用户已完成的考试历史记录，用户ID: {}", userId);
             List<EtUserExamHistory> histories = unifiedEtUserExamHistoryDao.getUserExamHistoryWithSubmitTime(userId);
             if (histories == null) {
-                histories = new ArrayList<>();
+                histories = new java.util.ArrayList<>();
             }
             log.info("获取到用户{}的{}条已完成考试历史记录", userId, histories.size());
             return histories;
@@ -137,7 +137,7 @@ public class EtUserExamHistoryServiceImpl implements EtUserExamHistoryService {
             log.info("获取用户已完成的试卷ID列表，用户ID: {}", userId);
             List<Long> examPaperIds = unifiedEtUserExamHistoryDao.getCompletedExamPaperIds(userId);
             if (examPaperIds == null) {
-                examPaperIds = new ArrayList<>();
+                examPaperIds = new java.util.ArrayList<>();
             }
             log.info("获取到用户{}已完成的{}个试卷", userId, examPaperIds.size());
             return examPaperIds;

@@ -26,27 +26,17 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
     
     @Override
     public PageResult getExamPaperList(ExamPaperQueryDTO queryDTO) {
-        int offset = (queryDTO.getPageNum() - 1) * queryDTO.getPageSize();
-        
-        // 查询总数
-        Long total = unifiedEtExamPaperDao.countExamPaperList(
-            queryDTO.getName(),
-            queryDTO.getStatus(),
-            queryDTO.getValiddpt(),
-            queryDTO.getValidsource(),
-            queryDTO.getPaperType()
-        );
-        
-        // 查询列表数据
-        List<EtExamPaper> examPaperList = unifiedEtExamPaperDao.selectExamPaperList(
-            queryDTO.getName(),
-            queryDTO.getStatus(),
-            queryDTO.getValiddpt(),
-            queryDTO.getValidsource(),
-            queryDTO.getPaperType(),
-            offset,
-            queryDTO.getPageSize()
-        );
+        EtExamPaperQuery query = new EtExamPaperQuery();
+        query.setName(queryDTO.getName());
+        query.setStatus(queryDTO.getStatus());
+        query.setValiddpt(queryDTO.getValiddpt());
+        query.setValidsource(queryDTO.getValidsource());
+        query.setPaperType(queryDTO.getPaperType());
+        query.setOffset((queryDTO.getPageNum() - 1) * queryDTO.getPageSize());
+        query.setPageSize(queryDTO.getPageSize());
+
+        long total = unifiedEtExamPaperDao.countByCondition(query);
+        List<EtExamPaper> examPaperList = unifiedEtExamPaperDao.selectByConditionWithPage(query);
 
         return new PageResult(queryDTO.getPageNum(), queryDTO.getPageSize(), total, examPaperList);
     }
@@ -118,7 +108,7 @@ public class AdminExamPaperServiceImpl implements AdminExamPaperService {
             examPaper.setCreateTime(now);
             examPaper.setUpdateTime(now);
             
-            return unifiedEtExamPaperDao.insert(examPaper) > 0;
+            return unifiedEtExamPaperDao.insertSelective(examPaper) > 0;
         } catch (Exception e) {
             return false;
         }

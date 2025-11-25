@@ -82,7 +82,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             throw new IllegalArgumentException("删除操作必须提供ID");
         }
         
-        int result = unifiedEtFieldDao.deleteById(fieldId.longValue());
+        int result = unifiedEtFieldDao.deleteById(fieldId);
         return result > 0;
     }
     
@@ -94,7 +94,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             throw new IllegalArgumentException("批量删除操作必须提供ID列表");
         }
         
-        int result = unifiedEtFieldDao.batchDelete(ids.stream().map(Long::valueOf).collect(java.util.stream.Collectors.toList()));
+        int result = unifiedEtFieldDao.batchDelete(ids);
         return result > 0;
     }
     
@@ -106,7 +106,7 @@ public class AdminFieldServiceImpl implements AdminFieldService {
             throw new IllegalArgumentException("ID不能为空");
         }
         
-        EtField field = unifiedEtFieldDao.selectById(fieldId.longValue());
+        EtField field = unifiedEtFieldDao.selectById(fieldId);
         if (field == null) {
             throw new RuntimeException("题库不存在");
         }
@@ -116,6 +116,6 @@ public class AdminFieldServiceImpl implements AdminFieldService {
     
     @Override
     public EtField selectById(Integer fieldId) {
-        return unifiedEtFieldDao.selectById(fieldId.longValue());
+        return unifiedEtFieldDao.selectById(fieldId);
     }
 }

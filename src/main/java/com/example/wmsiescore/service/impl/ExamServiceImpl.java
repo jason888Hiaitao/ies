@@ -515,23 +515,8 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<PendingExamDTO> getPendingExamsForUser(Long userId) {
-        // 边界场景处理：参数校验
-        if (userId == null || userId <= 0) {
-            log.warn("getPendingExamsForUser: 用户ID无效，userId: {}", userId);
-            return new ArrayList<>();
-        }
-        
-        try {
-            log.info("开始获取用户待考试列表，用户ID: {}", userId);
-            
-            List<PendingExamDTO> pendingExams = new ArrayList<>();
-            log.info("用户待考试列表获取完成，用户ID: {}, 待考试数量: {}", userId, pendingExams.size());
-            return pendingExams;
-            
-        } catch (Exception e) {
-            log.error("获取用户待考试列表时发生异常，用户ID: {}, 错误信息: {}", userId, e.getMessage(), e);
-            return new ArrayList<>();
-        }
+        log.info("开始获取用户待考试列表，用户ID: {}", userId);
+        return pendingExamService.getPendingExamsForUser(userId);
     }
 
     @Override

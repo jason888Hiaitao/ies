@@ -41,7 +41,7 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
         // 创建查询条件对象
         EtQuestionQuery query = new EtQuestionQuery();
         query.setName(queryDTO.getQuestionName());
-        query.setQuestionTypeId(queryDTO.getQuestionTypeId());
+        query.setQuestionTypeId(queryDTO.getQuestionTypeId() != null ? queryDTO.getQuestionTypeId().longValue() : null);
         // EtQuestionQuery中没有pointId和fieldId字段，暂时跳过这些条件
         query.setOffset((queryDTO.getPageNum() - 1) * queryDTO.getPageSize());
         query.setPageSize(queryDTO.getPageSize());
@@ -94,7 +94,7 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
         // 创建查询条件对象
         EtQuestionQuery query = new EtQuestionQuery();
         query.setName(queryDTO.getQuestionName());
-        query.setQuestionTypeId(queryDTO.getQuestionTypeId());
+        query.setQuestionTypeId(queryDTO.getQuestionTypeId() != null ? queryDTO.getQuestionTypeId().longValue() : null);
         // EtQuestionQuery中没有pointId和fieldId字段，暂时跳过这些条件
         
         return unifiedEtQuestionDao.countByCondition(query);
